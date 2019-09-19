@@ -36,16 +36,20 @@ class RelayerApiClient {
   
   private func request<T: Codable>(_ urlConvertible: URLRequestConvertible) -> Observable<T> {
     return Observable<T>.create { observer in
-      let request = AF.request(urlConvertible).responseDecodable(completionHandler: { (response: DataResponse<T, AFError>) in
+      let request = Alamofire.request(urlConvertible).responseData(completionHandler: { (response) in
         switch response.result {
         case .success(let value):
-          observer.onNext(value)
-          observer.onCompleted()
+          do {
+            let decoded = try JSONDecoder().decode(T.self, from: value)
+            observer.onNext(decoded)
+            observer.onCompleted()
+          } catch {
+            observer.onError(error)
+          }
         case .failure(let error):
           observer.onError(error)
         }
-      })
-      
+      })      
       return Disposables.create {
         request.cancel()
       }
@@ -82,7 +86,7 @@ enum RelayerNetworkClient: URLRequestConvertible {
       }
     }
     
-    urlRequest.method = method
+    urlRequest.httpMethod = method.rawValue
     urlRequest.httpBody = body
     return urlRequest
   }

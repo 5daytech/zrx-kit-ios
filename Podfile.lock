@@ -1,7 +1,20 @@
 PODS:
-  - Alamofire (5.0.0-rc.2)
+  - Alamofire (4.9.0)
   - BigInt (4.0.0)
   - CryptoSwift (1.0.0)
+  - EthereumKit.swift (0.6.3):
+    - Alamofire (~> 4.0)
+    - BigInt (~> 4.0)
+    - GRDB.swift (~> 4.0)
+    - HSCryptoKit (~> 1.4)
+    - HSHDWalletKit (~> 1.1)
+    - RxSwift (~> 5.0)
+  - GRDB.swift (4.4.0):
+    - GRDB.swift/standard (= 4.4.0)
+  - GRDB.swift/standard (4.4.0)
+  - HSCryptoKit (1.5.0)
+  - HSHDWalletKit (1.2.0):
+    - HSCryptoKit (~> 1)
   - RxSwift (5.0.0)
   - secp256k1.swift (0.1.4)
   - Web3 (0.4.1):
@@ -17,8 +30,9 @@ PODS:
     - Web3/Core
 
 DEPENDENCIES:
-  - Alamofire (~> 5.0.0-rc.2)
+  - Alamofire (~> 4.0)
   - BigInt (~> 4.0)
+  - EthereumKit.swift (from `https://github.com/abaikirov/ethereum-kit-ios/`)
   - RxSwift (~> 5)
   - Web3
   - Web3/ContractABI
@@ -28,18 +42,34 @@ SPEC REPOS:
     - Alamofire
     - BigInt
     - CryptoSwift
+    - GRDB.swift
+    - HSCryptoKit
+    - HSHDWalletKit
     - RxSwift
     - secp256k1.swift
     - Web3
 
+EXTERNAL SOURCES:
+  EthereumKit.swift:
+    :git: https://github.com/abaikirov/ethereum-kit-ios/
+
+CHECKOUT OPTIONS:
+  EthereumKit.swift:
+    :commit: 9bff3497cebe525d42925eca044e29a5dc1c0004
+    :git: https://github.com/abaikirov/ethereum-kit-ios/
+
 SPEC CHECKSUMS:
-  Alamofire: f9450d3c7f6bea2ad62e7a541c3e9b186c7991d6
+  Alamofire: afc3e7c6db61476cb45cdd23fed06bad03bbc321
   BigInt: 2aad1a9942dc932ec8b84290d2c564a3d76f97ab
   CryptoSwift: d81eeaa59dc5a8d03720fe919a6fd07b51f7439f
+  EthereumKit.swift: 70ef9cbd4795a2f1c11b2767093a3365d55189b0
+  GRDB.swift: 4f9b6e7efc9470426f6a6de10ec1fee798ff7e43
+  HSCryptoKit: 514a3111fd37ad18b7261d4a55271daaba3b0eb9
+  HSHDWalletKit: 6f5d5b1f9b1f950c948bdff13f5f52e5c5bcb7bb
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
   Web3: a4eb0d0cdedbef3f0e4c97ea83a4232a1b1f952b
 
-PODFILE CHECKSUM: 1f9ae93e667620329eebb76ff7c05b4afafea479
+PODFILE CHECKSUM: a7a1e543165be06a960edaffa2ca8e8241bb4c50
 
 COCOAPODS: 1.7.5

@@ -11,7 +11,7 @@ def common_pods
     pod 'RxSwift', '~> 5'
     pod 'Web3'
     pod 'Web3/ContractABI'
-    pod 'Alamofire', '~> 5.0.0-rc.2'
+    pod 'Alamofire', '~> 4.0'
 end
 
 target :zrxkit do
