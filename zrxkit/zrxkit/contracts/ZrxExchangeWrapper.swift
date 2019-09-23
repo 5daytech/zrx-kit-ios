@@ -23,5 +23,7 @@ public class ZrxExchangeWrapper: Contract {
     let outputs = [
       SolidityFunctionParameter(name: "totalFillResults", type: .tuple([.uint256, .uint256, .uint256, .uint256]))
     ]
+    let method = SolidityNonPayableFunction(name: "marketBuyOrders", inputs: inputs, outputs: outputs, handler: self)
+    
   }
 }

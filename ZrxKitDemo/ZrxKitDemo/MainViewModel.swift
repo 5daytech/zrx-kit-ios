@@ -13,17 +13,21 @@ class MainViewModel {
   private let tokenAddress = "0x30845a385581ce1dc51d651ff74689d7f4415146"
   private let decimals = 18
   
-  private let zrxKitNetworkType: ZrxKit.NetworkType = ZrxKit.NetworkType.Ropsten
+  private let networkType: EthereumKit.NetworkType = .ropsten
+  private let zrxKitNetworkType: ZrxKit.NetworkType = .Ropsten
   
   private let zrxKit: ZrxKit
-  private let ethereumKit: EthereumKit
+  let ethereumKit: EthereumKit
   let wethContract: WethWrapper
+  
+  let adapters: [IAdapter]
   
   
   init() {
-    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
+//    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
+    let words = "burden crumble violin flip multiply above usual dinner eight unusual clay identify".split(separator: " ").map { String($0) }
     let seed = Mnemonic.seed(mnemonic: words)
-    let hdWallet = HDWallet(seed: seed, coinType: 1, xPrivKey: 0, xPubKey: 0)
+    let hdWallet = HDWallet(seed: seed, coinType: 60, xPrivKey: 0, xPubKey: 0)
     let privateKey = try! hdWallet.privateKey(account: 0, index: 0, chain: .external).raw
     
     let pairs = [Pair<AssetItem, AssetItem>(first: ZrxKit.assetItemForAddress(address: tokenAddress), second: ZrxKit.assetItemForAddress(address: wethAddress))]
@@ -31,8 +35,14 @@ class MainViewModel {
     let relayers = [Relayer(id: 0, name: "BDRelayer", availablePairs: pairs, feeRecipients: [feeRecipient], exchangeAddress: zrxKitNetworkType.exchangeAddress, config: config)]
     
     zrxKit = ZrxKit.getInstance(relayers: relayers, privateKey: privateKey, infuraKey: infuraCredentials.secret!)
-    ethereumKit = try! EthereumKit.instance(words: words, syncMode: .api, infuraCredentials: infuraCredentials, etherscanApiKey: etherscanKey)
+    ethereumKit = try! EthereumKit.instance(privateKey: privateKey, syncMode: .api, networkType: networkType, infuraCredentials: infuraCredentials, etherscanApiKey: etherscanKey, walletId: "default")
     
     wethContract = zrxKit.getWethWrapperInstance()
+    
+    adapters = [EthereumAdapter(ethereumKit: ethereumKit),
+                Erc20Adapter(ethereumKit: ethereumKit, name: "Wrapped Eth", coin: "WETH", contractAddress: wethAddress, decimal: decimals),
+                Erc20Adapter(ethereumKit: ethereumKit, name: "Tameki Coin V2", coin: "TMKv2", contractAddress: tokenAddress, decimal: decimals)]
+    
+    ethereumKit.start()
   }
 }

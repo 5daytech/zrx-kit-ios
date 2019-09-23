@@ -12,6 +12,13 @@ class MainTabController: UITabBarController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    viewControllers = []
+    let viewModel = MainViewModel()
+    
+    let balanceController = BalanceController()
+    balanceController.viewModel = viewModel
+    let balanceNavigation = UINavigationController(rootViewController: balanceController)
+    balanceNavigation.tabBarItem.title = "Balance"
+    
+    viewControllers = [balanceNavigation]
   }
 }

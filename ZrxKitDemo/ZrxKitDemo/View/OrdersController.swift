@@ -9,20 +9,19 @@
 import UIKit
 import RxSwift
 
-class OrdersController: UIViewController {
+class OrdersController: UITableViewController {
+  
+  
   private let disposeBag = DisposeBag()
+  
+  var viewModel: MainViewModel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let vm = MainViewModel()
-    vm.wethContract.totalSupply
-      .observeOn(MainScheduler.instance)
-      .subscribe(onNext: { supply in
-        print(supply)
-      }, onError: { error in
-        print(error)
-      })
-      .disposed(by: disposeBag)
+    
+    
   }
+  
+  
 }
