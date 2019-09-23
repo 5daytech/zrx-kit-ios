@@ -1,6 +1,6 @@
 import Foundation
 
-enum EAssetProxyId: String {
+public enum EAssetProxyId: String {
   case ERC20 = "0xf47261b0"
   case ERC721 = "0x02571792"
   case MultiAsset = "0x94cfcdd7"

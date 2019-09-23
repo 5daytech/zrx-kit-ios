@@ -1,7 +1,7 @@
 import Foundation
 import BigInt
 
-struct AssetItem {
+public struct AssetItem {
   let minAmount: BigUInt
   let maxAmount: BigUInt
   let address: String

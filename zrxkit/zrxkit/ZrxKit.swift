@@ -2,13 +2,19 @@ import Foundation
 import BigInt
 import Web3
 
-class ZrxKit {
+public class ZrxKit {
   static private let minAmount = BigUInt(0)
   static private let maxAmount = BigUInt(999999999999999999)
   
-//  static func getInstance(relayers: [Relayer], privateKey: Data, infuraKey: String, networkType: NetworkType = .Ropsten) -> ZrxKit {
-//    
-//  }
+  public static func getInstance(relayers: [Relayer], privateKey: Data, infuraKey: String, networkType: NetworkType = .Ropsten) -> ZrxKit {
+    let relayerManager = RelayerManager(availableRelayers: relayers, networkType: networkType)
+    let ethereumPrivateKey = try! EthereumPrivateKey(hexPrivateKey: privateKey.toHexString())
+    return ZrxKit(relayerManager: relayerManager, privateKey: ethereumPrivateKey, infuraKey: infuraKey, networkType: networkType)
+  }
+  
+  public static func assetItemForAddress(address: String, type: EAssetProxyId = EAssetProxyId.ERC20) -> AssetItem {
+    return AssetItem(minAmount: minAmount, maxAmount: maxAmount, address: address, type: type)
+  }
   
   let relayerManager: IRelayerManager
   private let privateKey: EthereumPrivateKey
@@ -16,14 +22,14 @@ class ZrxKit {
   private let networkType: NetworkType
   private let web3: Web3
   
-  init(relayerManager: IRelayerManager, privateKey: Data, infuraKey: String, networkType: NetworkType) {
+  private init(relayerManager: IRelayerManager, privateKey: EthereumPrivateKey, infuraKey: String, networkType: NetworkType) {
     self.relayerManager = relayerManager
-    self.privateKey = try! EthereumPrivateKey(hexPrivateKey: privateKey.toHexString())
+    self.privateKey = privateKey
     self.networkType = networkType
     web3 = Web3(rpcURL: networkType.getInfuraUrl(infuraKey: infuraKey))
   }
   
-  func getWethWrapperInstance(wrapperAddress: String? = nil) -> WethWrapper {
+  public func getWethWrapperInstance(wrapperAddress: String? = nil) -> WethWrapper {
     let address: EthereumAddress
     if wrapperAddress != nil {
       address = EthereumAddress(hexString: wrapperAddress!)!
@@ -33,7 +39,7 @@ class ZrxKit {
     return WethWrapper(address: address, eth: web3.eth, privateKey: privateKey)
   }
   
-  enum NetworkType {
+  public enum NetworkType {
     case MainNet
     case Ropsten
     case Kovan
@@ -49,7 +55,7 @@ class ZrxKit {
       }
     }
     
-    var exchangeAddress: String {
+    public var exchangeAddress: String {
       switch self {
       case .MainNet:
         return "0x080bf510fcbf18b91105470639e9561022937712"

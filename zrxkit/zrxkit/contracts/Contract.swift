@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 import Web3
 
-class Contract: GenericERC20Contract {
+public class Contract: GenericERC20Contract {
   
   let privateKey: EthereumPrivateKey
   

@@ -3,7 +3,7 @@ import RxSwift
 import BigInt
 import Web3
 
-class WethWrapper: Contract {
+public class WethWrapper: Contract {
   
   typealias TransactionReceipt = Bool
   
@@ -16,18 +16,20 @@ class WethWrapper: Contract {
     return SolidityEvent(name: "Approval", anonymous: false, inputs: inputs)
   }
   
-  override var events: [SolidityEvent] {
+  override public var events: [SolidityEvent] {
     return [WethWrapper.Approval]
   }
   
-  var totalSupply: Observable<BigUInt> {
+  public var totalSupply: Observable<BigUInt> {
     let outputs = [
       SolidityFunctionParameter(name: "", type: .uint256)
     ]
     let method = SolidityConstantFunction(name: "totalSupply", inputs: [], outputs: outputs, handler: self)
     return read(method: method.invoke(), onParse: { (response) -> BigUInt in
-      print(response)
-      return 21.gwei
+      if let value = response.first?.value as? BigUInt {
+        return value
+      }
+      return 0.gwei
     })
   }
   

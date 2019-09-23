@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		85F3088FE867C0F71EA1E95B /* Pods_ZrxKitDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA4CC97DF829DE22DEC3C8D /* Pods_ZrxKitDemo.framework */; };
 		B5A9BB9123221B6E00DF756B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9BB9023221B6E00DF756B /* AppDelegate.swift */; };
-		B5A9BB9323221B6E00DF756B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A9BB9223221B6E00DF756B /* ViewController.swift */; };
 		B5A9BB9623221B6E00DF756B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5A9BB9423221B6E00DF756B /* Main.storyboard */; };
 		B5A9BB9823221B7000DF756B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B5A9BB9723221B7000DF756B /* Assets.xcassets */; };
 		B5A9BB9B23221B7000DF756B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5A9BB9923221B7000DF756B /* LaunchScreen.storyboard */; };
 		B5A9BBA323221B9000DF756B /* zrxkit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A9BBA223221B9000DF756B /* zrxkit.framework */; };
 		B5A9BBA423221B9000DF756B /* zrxkit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A9BBA223221B9000DF756B /* zrxkit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B5F2F16523336F59001D4926 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F16423336F59001D4926 /* MainViewModel.swift */; };
+		B5F2F1682333BA54001D4926 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F1672333BA54001D4926 /* MainTabController.swift */; };
+		B5F2F16B2333BB1C001D4926 /* OrdersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F16A2333BB1C001D4926 /* OrdersController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,13 +38,14 @@
 		75C6A83F78F4366969E05E93 /* Pods-ZrxKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZrxKitDemo.release.xcconfig"; path = "Target Support Files/Pods-ZrxKitDemo/Pods-ZrxKitDemo.release.xcconfig"; sourceTree = "<group>"; };
 		B5A9BB8D23221B6E00DF756B /* ZrxKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZrxKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5A9BB9023221B6E00DF756B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B5A9BB9223221B6E00DF756B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B5A9BB9523221B6E00DF756B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B5A9BB9723221B7000DF756B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B5A9BB9A23221B7000DF756B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B5A9BB9C23221B7000DF756B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5A9BBA223221B9000DF756B /* zrxkit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = zrxkit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5F2F16423336F59001D4926 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		B5F2F1672333BA54001D4926 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
+		B5F2F16A2333BB1C001D4926 /* OrdersController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersController.swift; sourceTree = "<group>"; };
 		CCA4CC97DF829DE22DEC3C8D /* Pods_ZrxKitDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ZrxKitDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -100,15 +102,24 @@
 		B5A9BB8F23221B6E00DF756B /* ZrxKitDemo */ = {
 			isa = PBXGroup;
 			children = (
+				B5F2F1692333BAE1001D4926 /* View */,
 				B5A9BB9023221B6E00DF756B /* AppDelegate.swift */,
-				B5A9BB9223221B6E00DF756B /* ViewController.swift */,
 				B5A9BB9423221B6E00DF756B /* Main.storyboard */,
 				B5A9BB9723221B7000DF756B /* Assets.xcassets */,
 				B5A9BB9923221B7000DF756B /* LaunchScreen.storyboard */,
 				B5A9BB9C23221B7000DF756B /* Info.plist */,
 				B5F2F16423336F59001D4926 /* MainViewModel.swift */,
+				B5F2F1672333BA54001D4926 /* MainTabController.swift */,
 			);
 			path = ZrxKitDemo;
+			sourceTree = "<group>";
+		};
+		B5F2F1692333BAE1001D4926 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B5F2F16A2333BB1C001D4926 /* OrdersController.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,8 +238,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5A9BB9323221B6E00DF756B /* ViewController.swift in Sources */,
+				B5F2F16B2333BB1C001D4926 /* OrdersController.swift in Sources */,
 				B5A9BB9123221B6E00DF756B /* AppDelegate.swift in Sources */,
+				B5F2F1682333BA54001D4926 /* MainTabController.swift in Sources */,
 				B5F2F16523336F59001D4926 /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
