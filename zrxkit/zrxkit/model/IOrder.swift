@@ -1,6 +1,6 @@
 import Foundation
 
-protocol IOrder {
+public protocol IOrder {
   var exchangeAddress: String { get }
   var makerAssetData: String { get }
   var takerAssetData: String { get }

@@ -6,31 +6,27 @@ class RelayerApiClient {
   
   let relayerConfig: RelayerConfig
   
-  var prefix: String {
-    return "\(relayerConfig.suffix)\(relayerConfig.version)"
-  }
-  
   init(config: RelayerConfig) {
     relayerConfig = config
   }
   
   func getOrderBook(base: String, quote: String, networkId: Int = 3) -> Observable<OrderBookResponse> {
-    let urlConvertible = RelayerNetworkClient.getOrderBook(url: "\(prefix)/orderbook", baseAsset: base, quoteAsset: quote, networkId: networkId)
+    let urlConvertible = RelayerNetworkClient.getOrderBook(url: "\(relayerConfig.url)/orderbook", baseAsset: base, quoteAsset: quote, networkId: networkId)
     return request(urlConvertible)
   }
   
   func feeRecipients(networkId: Int = 3) -> Observable<FeeRecipientsResponse> {
-    let urlConvertible = RelayerNetworkClient.getFeeRecipients(url: "\(prefix)/fee_recipients", networkId: networkId)
+    let urlConvertible = RelayerNetworkClient.getFeeRecipients(url: "\(relayerConfig.url)/fee_recipients", networkId: networkId)
     return request(urlConvertible)
   }
   
   func getAssets(limit: Int = 100, networkId: Int = 3) -> Observable<AssetPairsResponse> {
-    let urlConvertible = RelayerNetworkClient.getAssetPairs(url: "\(prefix)/asset_pairs", perPage: limit, networkId: networkId)
+    let urlConvertible = RelayerNetworkClient.getAssetPairs(url: "\(relayerConfig.url)/asset_pairs", perPage: limit, networkId: networkId)
     return request(urlConvertible)
   }
   
   func postOrder(order: SignedOrder, networkId: Int = 3) -> Observable<UInt> {
-    let urlConvertible = RelayerNetworkClient.postOrder(url: "\(prefix)/order", order: order, networkId: networkId)
+    let urlConvertible = RelayerNetworkClient.postOrder(url: "\(relayerConfig.url)/order", order: order, networkId: networkId)
     return request(urlConvertible)
   }
   

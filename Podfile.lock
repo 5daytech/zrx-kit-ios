@@ -23,6 +23,11 @@ PODS:
   - HSCryptoKit (1.5.0)
   - HSHDWalletKit (1.2.0):
     - HSCryptoKit (~> 1)
+  - RxCocoa (5.0.0):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.0.0):
+    - RxSwift (~> 5)
   - RxSwift (5.0.0)
   - secp256k1.swift (0.1.4)
   - Web3 (0.4.1):
@@ -42,6 +47,7 @@ DEPENDENCIES:
   - BigInt (~> 4.0)
   - Erc20Kit.swift (from `https://github.com/horizontalsystems/ethereum-kit-ios/`)
   - EthereumKit.swift (from `https://github.com/horizontalsystems/ethereum-kit-ios/`)
+  - RxCocoa (~> 5)
   - RxSwift (~> 5)
   - Web3
   - Web3/ContractABI
@@ -55,6 +61,8 @@ SPEC REPOS:
     - GRDB.swift
     - HSCryptoKit
     - HSHDWalletKit
+    - RxCocoa
+    - RxRelay
     - RxSwift
     - secp256k1.swift
     - Web3
@@ -83,10 +91,12 @@ SPEC CHECKSUMS:
   GRDB.swift: 4f9b6e7efc9470426f6a6de10ec1fee798ff7e43
   HSCryptoKit: 514a3111fd37ad18b7261d4a55271daaba3b0eb9
   HSHDWalletKit: 6f5d5b1f9b1f950c948bdff13f5f52e5c5bcb7bb
+  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
+  RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
   Web3: a4eb0d0cdedbef3f0e4c97ea83a4232a1b1f952b
 
-PODFILE CHECKSUM: fbba9ff53adec881e7b60beee3d690af2be2c787
+PODFILE CHECKSUM: 096a81e17fcf50fdf041b64796055852c3b28c31
 
 COCOAPODS: 1.7.5

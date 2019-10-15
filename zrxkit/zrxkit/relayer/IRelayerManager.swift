@@ -1,7 +1,7 @@
 import Foundation
 import RxSwift
 
-protocol IRelayerManager {
+public protocol IRelayerManager {
   var availableRelayers: [Relayer] { get }
   
   func getAssetPairs(relayerId: Int) -> Observable<[AssetPair]>

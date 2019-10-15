@@ -2,11 +2,11 @@ import Foundation
 import BigInt
 
 public struct AssetItem {
-  let minAmount: BigUInt
-  let maxAmount: BigUInt
-  let address: String
-  let type: EAssetProxyId
-  var assetData: String {
+  public let minAmount: BigUInt
+  public let maxAmount: BigUInt
+  public let address: String
+  public let type: EAssetProxyId
+  public var assetData: String {
     return type.encode(asset: address)
   }
 }

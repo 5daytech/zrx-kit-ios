@@ -1,17 +1,17 @@
 import Foundation
 
-struct OrderBook: Codable {
+public struct OrderBook: Codable {
   let total: Int
   let page: Int
   let perPage: Int
-  let records: [OrderBook]
+  public let records: [OrderRecord]
 }
 
-struct OrderRecord {
-  let order: SignedOrder
+public struct OrderRecord: Codable {
+  public let order: SignedOrder
   let metaData: OrderMetaData
 }
 
-struct OrderMetaData {
+public struct OrderMetaData: Codable {
   let orderHash: String
 }

@@ -16,7 +16,7 @@ public class ZrxKit {
     return AssetItem(minAmount: minAmount, maxAmount: maxAmount, address: address, type: type)
   }
   
-  let relayerManager: IRelayerManager
+  public let relayerManager: IRelayerManager
   private let privateKey: EthereumPrivateKey
 //  private let gasInfoProvider: ContractGasProvider
   private let networkType: NetworkType
@@ -37,6 +37,14 @@ public class ZrxKit {
       address = EthereumAddress(hexString: networkType.wethAddress)!
     }
     return WethWrapper(address: address, eth: web3.eth, privateKey: privateKey)
+  }
+  
+  public func getErc20ProxyInstance(tokenAddress: String) -> Erc20ProxyWrapper {
+    return getErc20ProxyInstance(tokenAddress: tokenAddress, proxyAddress: networkType.erc20ProxyAddress)
+  }
+  
+  public func getErc20ProxyInstance(tokenAddress: String, proxyAddress: String) -> Erc20ProxyWrapper {
+    return Erc20ProxyWrapper(address: EthereumAddress(hexString: tokenAddress)!, eth: web3.eth, privateKey: privateKey, proxyAddress: EthereumAddress(hexString: proxyAddress)!)
   }
   
   public enum NetworkType {

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TransactionsController" customModule="ZrxKitDemo" customModuleProvider="target">
+            <connections>
+                <outlet property="tableView" destination="aPI-si-quH" id="I5i-GA-qQd"/>
+                <outlet property="view" destination="iN0-l3-epB" id="mqL-I8-B74"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="NiF-qS-SyS">
+                    <rect key="frame" x="0.0" y="44" width="414" height="60"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xCy-Sa-rrf">
+                            <rect key="frame" x="0.0" y="0.0" width="138" height="60"/>
+                            <state key="normal" title="Eth"/>
+                            <connections>
+                                <action selector="onEthAction:" destination="-1" eventType="touchUpInside" id="43S-QY-2j3"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pnU-vf-9SS">
+                            <rect key="frame" x="138" y="0.0" width="138" height="60"/>
+                            <state key="normal" title="WETH"/>
+                            <connections>
+                                <action selector="onWethAction:" destination="-1" eventType="touchUpInside" id="Tex-qO-sN6"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tSr-le-ab3">
+                            <rect key="frame" x="276" y="0.0" width="138" height="60"/>
+                            <state key="normal" title="Token"/>
+                            <connections>
+                                <action selector="onTokenAction:" destination="-1" eventType="touchUpInside" id="jnO-Tq-hqa"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="60" id="S6v-Uh-ESZ"/>
+                    </constraints>
+                </stackView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aPI-si-quH">
+                    <rect key="frame" x="0.0" y="104" width="414" height="758"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="aPI-si-quH" secondAttribute="bottom" id="415-UE-ZD5"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="aPI-si-quH" secondAttribute="trailing" id="DGw-bd-dVv"/>
+                <constraint firstItem="NiF-qS-SyS" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="HDq-rg-dyj"/>
+                <constraint firstItem="aPI-si-quH" firstAttribute="top" secondItem="NiF-qS-SyS" secondAttribute="bottom" id="fQp-cK-VsD"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="NiF-qS-SyS" secondAttribute="trailing" id="wsu-z2-4AX"/>
+                <constraint firstItem="aPI-si-quH" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="xPw-S8-0Vd"/>
+                <constraint firstItem="NiF-qS-SyS" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="ymJ-di-Nt9"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+        </view>
+    </objects>
+</document>

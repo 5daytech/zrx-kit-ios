@@ -19,6 +19,19 @@ class MainTabController: UITabBarController {
     let balanceNavigation = UINavigationController(rootViewController: balanceController)
     balanceNavigation.tabBarItem.title = "Balance"
     
-    viewControllers = [balanceNavigation]
+    let asksController = OrdersController.instance(viewModel: viewModel, type: .ASK)
+    let asksNavigation = UINavigationController(rootViewController: asksController)
+    asksNavigation.tabBarItem.title = "ASKS"
+    
+    let bidsController = OrdersController.instance(viewModel: viewModel, type: .BID)
+    let bidsNavigation = UINavigationController(rootViewController: bidsController)
+    bidsNavigation.tabBarItem.title = "BIDS"
+    
+    let transactionsController = TransactionsController.instance(viewModel: viewModel)
+    let transactionsNavigation = UINavigationController(rootViewController: transactionsController)
+    transactionsNavigation.tabBarItem.title = "Transactions"
+    
+    
+    viewControllers = [balanceNavigation, transactionsNavigation, asksNavigation, bidsNavigation]
   }
 }

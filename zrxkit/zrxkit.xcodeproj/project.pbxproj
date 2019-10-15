@@ -29,6 +29,7 @@
 		B5D3A6AE23192A90004B07D9 /* Relayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3A6AD23192A90004B07D9 /* Relayer.swift */; };
 		B5D3A6B023192B9D004B07D9 /* Pair.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3A6AF23192B9D004B07D9 /* Pair.swift */; };
 		B5D3A6B223192C25004B07D9 /* AssetItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5D3A6B123192C25004B07D9 /* AssetItem.swift */; };
+		B5F1C76F234763B60011442B /* Erc20ProxyWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1C76E234763B60011442B /* Erc20ProxyWrapper.swift */; };
 		B5F2F16D2334A065001D4926 /* ZrxExchangeWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F16C2334A065001D4926 /* ZrxExchangeWrapper.swift */; };
 		B5F2F16F2334A15C001D4926 /* StructFunctionEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F16E2334A15C001D4926 /* StructFunctionEncoder.swift */; };
 /* End PBXBuildFile section */
@@ -60,6 +61,7 @@
 		B5D3A6AD23192A90004B07D9 /* Relayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Relayer.swift; sourceTree = "<group>"; };
 		B5D3A6AF23192B9D004B07D9 /* Pair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pair.swift; sourceTree = "<group>"; };
 		B5D3A6B123192C25004B07D9 /* AssetItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetItem.swift; sourceTree = "<group>"; };
+		B5F1C76E234763B60011442B /* Erc20ProxyWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Erc20ProxyWrapper.swift; sourceTree = "<group>"; };
 		B5F2F16C2334A065001D4926 /* ZrxExchangeWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZrxExchangeWrapper.swift; sourceTree = "<group>"; };
 		B5F2F16E2334A15C001D4926 /* StructFunctionEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructFunctionEncoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +104,7 @@
 				B5C01F582331EDFE00B1C235 /* Contract.swift */,
 				B5F2F16C2334A065001D4926 /* ZrxExchangeWrapper.swift */,
 				B5F2F16E2334A15C001D4926 /* StructFunctionEncoder.swift */,
+				B5F1C76E234763B60011442B /* Erc20ProxyWrapper.swift */,
 			);
 			path = contracts;
 			sourceTree = "<group>";
@@ -290,6 +293,7 @@
 			files = (
 				B5A4DA3D2328E29100E9766A /* RelayerApiClient.swift in Sources */,
 				B5A9BBA923221F1E00DF756B /* ESignatureType.swift in Sources */,
+				B5F1C76F234763B60011442B /* Erc20ProxyWrapper.swift in Sources */,
 				B5D3A6AE23192A90004B07D9 /* Relayer.swift in Sources */,
 				B5A9BBB12322220600DF756B /* SignedOrder.swift in Sources */,
 				B5A4DA392328B0F900E9766A /* OrderBookResponse.swift in Sources */,

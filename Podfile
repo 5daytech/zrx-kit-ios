@@ -9,6 +9,7 @@ project 'ZrxKitDemo/ZrxKitDemo'
 def common_pods
     pod 'BigInt', '~> 4.0'
     pod 'RxSwift', '~> 5'
+    pod 'RxCocoa', '~> 5'
     pod 'Web3'
     pod 'Web3/ContractABI'
     pod 'Alamofire', '~> 4.0'

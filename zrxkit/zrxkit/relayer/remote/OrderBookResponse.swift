@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct OrderBookResponse: Codable {
-  let bids: OrderBook
-  let asks: OrderBook
+public struct OrderBookResponse: Codable {
+  public let bids: OrderBook
+  public let asks: OrderBook
 }

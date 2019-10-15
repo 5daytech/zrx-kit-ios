@@ -85,7 +85,7 @@ extension EthereumAdapter: IAdapter {
   }
   
   var transactionsObservable: Observable<Void> {
-    return ethereumKit.transactionsObservable.map { _ in () }
+    return ethereumKit.transactionsObservable.map{ _ in () }
   }
   
   func validate(address: String) throws {

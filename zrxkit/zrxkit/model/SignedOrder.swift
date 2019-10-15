@@ -1,31 +1,31 @@
 import Foundation
 
-struct SignedOrder: IOrder, Codable {
-  var exchangeAddress: String
+public struct SignedOrder: IOrder, Codable {
+  public var exchangeAddress: String
   
-  var makerAssetData: String
+  public var makerAssetData: String
   
-  var takerAssetData: String
+  public var takerAssetData: String
   
-  var makerAssetAmount: String
+  public var makerAssetAmount: String
   
-  var takerAssetAmount: String
+  public var takerAssetAmount: String
   
-  var makerAddress: String
+  public var makerAddress: String
   
-  var takerAddress: String
+  public var takerAddress: String
   
-  var expirationTimeSeconds: String
+  public var expirationTimeSeconds: String
   
-  var senderAddress: String
+  public var senderAddress: String
   
-  var feeRecipientAddress: String
+  public var feeRecipientAddress: String
   
-  var makerFee: String
+  public var makerFee: String
   
-  var takerFee: String
+  public var takerFee: String
   
-  var salt: String
+  public var salt: String
   
   let signature: String
   

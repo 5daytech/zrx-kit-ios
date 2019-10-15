@@ -41,7 +41,7 @@ public class Contract: GenericERC20Contract {
           }
           
           do {
-            let signedTransaction = try transaction.sign(with: self.privateKey)
+            let signedTransaction = try transaction.sign(with: self.privateKey)            
             self.eth.sendRawTransaction(transaction: signedTransaction, response: { (hashResponse) in
               switch hashResponse.status {
               case .success(let result):
