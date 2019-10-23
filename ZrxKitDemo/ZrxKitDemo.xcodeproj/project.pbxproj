@@ -25,6 +25,9 @@
 		B5A9BB9B23221B7000DF756B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5A9BB9923221B7000DF756B /* LaunchScreen.storyboard */; };
 		B5A9BBA323221B9000DF756B /* zrxkit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5A9BBA223221B9000DF756B /* zrxkit.framework */; };
 		B5A9BBA423221B9000DF756B /* zrxkit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B5A9BBA223221B9000DF756B /* zrxkit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B5C682C22355DA8400636D6A /* CreateOrderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C682C12355DA8400636D6A /* CreateOrderController.swift */; };
+		B5C682C42355DA9B00636D6A /* CreateOrderController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5C682C32355DA9B00636D6A /* CreateOrderController.xib */; };
+		B5C682C62355E9AF00636D6A /* OrdersController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5C682C52355E9AF00636D6A /* OrdersController.xib */; };
 		B5F1C7622344A1F40011442B /* TransactionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1C7612344A1F40011442B /* TransactionsController.swift */; };
 		B5F1C7642345BB290011442B /* TransactionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1C7632345BB290011442B /* TransactionsCell.swift */; };
 		B5F1C7662345BBCB0011442B /* TransactionsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5F1C7652345BBCB0011442B /* TransactionsCell.xib */; };
@@ -71,6 +74,9 @@
 		B5A9BB9A23221B7000DF756B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B5A9BB9C23221B7000DF756B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B5A9BBA223221B9000DF756B /* zrxkit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = zrxkit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5C682C12355DA8400636D6A /* CreateOrderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrderController.swift; sourceTree = "<group>"; };
+		B5C682C32355DA9B00636D6A /* CreateOrderController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreateOrderController.xib; sourceTree = "<group>"; };
+		B5C682C52355E9AF00636D6A /* OrdersController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrdersController.xib; sourceTree = "<group>"; };
 		B5F1C7612344A1F40011442B /* TransactionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsController.swift; sourceTree = "<group>"; };
 		B5F1C7632345BB290011442B /* TransactionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsCell.swift; sourceTree = "<group>"; };
 		B5F1C7652345BBCB0011442B /* TransactionsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionsCell.xib; sourceTree = "<group>"; };
@@ -149,6 +155,7 @@
 				B5F2F16A2333BB1C001D4926 /* OrdersController.swift */,
 				B57DB743233CA1F3008ED1EE /* OrdersCell.swift */,
 				B57DB745233CA201008ED1EE /* OrdersCell.xib */,
+				B5C682C52355E9AF00636D6A /* OrdersController.xib */,
 			);
 			path = Orders;
 			sourceTree = "<group>";
@@ -190,6 +197,15 @@
 			path = ZrxKitDemo;
 			sourceTree = "<group>";
 		};
+		B5C682C02355DA4000636D6A /* CreateOrderStep */ = {
+			isa = PBXGroup;
+			children = (
+				B5C682C12355DA8400636D6A /* CreateOrderController.swift */,
+				B5C682C32355DA9B00636D6A /* CreateOrderController.xib */,
+			);
+			path = CreateOrderStep;
+			sourceTree = "<group>";
+		};
 		B5F1C7602344A1DF0011442B /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,6 +229,7 @@
 		B5F2F1692333BAE1001D4926 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B5C682C02355DA4000636D6A /* CreateOrderStep */,
 				B5F1C7692345F3480011442B /* ConfirmOrderStep */,
 				B5F1C7602344A1DF0011442B /* Transactions */,
 				B57DB742233CA1D5008ED1EE /* Orders */,
@@ -286,8 +303,10 @@
 				B5F1C76B2345F35D0011442B /* ConfirmOrderController.xib in Resources */,
 				B57DB746233CA201008ED1EE /* OrdersCell.xib in Resources */,
 				B5A9BB9B23221B7000DF756B /* LaunchScreen.storyboard in Resources */,
+				B5C682C62355E9AF00636D6A /* OrdersController.xib in Resources */,
 				B5A9BB9823221B7000DF756B /* Assets.xcassets in Resources */,
 				B5545A8A2338AD5000359873 /* BalanceCell.xib in Resources */,
+				B5C682C42355DA9B00636D6A /* CreateOrderController.xib in Resources */,
 				B5F1C7662345BBCB0011442B /* TransactionsCell.xib in Resources */,
 				B5A9BB9623221B6E00DF756B /* Main.storyboard in Resources */,
 			);
@@ -357,6 +376,7 @@
 				B5545A832338AA6C00359873 /* TransactionRecord.swift in Sources */,
 				B5F2F1682333BA54001D4926 /* MainTabController.swift in Sources */,
 				B5F2F16523336F59001D4926 /* MainViewModel.swift in Sources */,
+				B5C682C22355DA8400636D6A /* CreateOrderController.swift in Sources */,
 				B5545A7C2338A80E00359873 /* IAdapter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,7 +525,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KG866Y6KDX;
+				DEVELOPMENT_TEAM = U4R65QQKZ7;
 				INFOPLIST_FILE = ZrxKitDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -524,7 +544,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KG866Y6KDX;
+				DEVELOPMENT_TEAM = U4R65QQKZ7;
 				INFOPLIST_FILE = ZrxKitDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

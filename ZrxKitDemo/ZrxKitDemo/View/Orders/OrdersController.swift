@@ -10,7 +10,11 @@ import UIKit
 import RxSwift
 import zrxkit
 
-class OrdersController: UITableViewController {
+protocol OrdersControllerDelegate {
+  func showCreateOrderStep(_ side: EOrderSide)
+}
+
+class OrdersController: UIViewController {
   static func instance(viewModel: MainViewModel, type: EOrderSide) -> OrdersController {
     let ordersController = OrdersController()
     ordersController.viewModel = viewModel
@@ -22,6 +26,9 @@ class OrdersController: UITableViewController {
   
   var viewModel: MainViewModel!
   var side: EOrderSide!
+  var delegate: OrdersControllerDelegate?
+  
+  @IBOutlet var tableView: UITableView!
   
   private var orders = [SignedOrder]()
   
@@ -51,15 +58,22 @@ class OrdersController: UITableViewController {
     viewModel.refreshOrders()
   }
   
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  @IBAction func onCreateOrderAction(_ sender: UIButton) {
+    print("onCreateOrderAction")
+    delegate?.showCreateOrderStep(side)
+  }
+}
+
+extension OrdersController: UITableViewDelegate, UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return orders.count
   }
   
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 80
   }
   
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: OrdersCell.reuseID) as? OrdersCell else {
       fatalError()
     }
@@ -67,14 +81,14 @@ class OrdersController: UITableViewController {
     return cell
   }
   
-  override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     guard let cell = cell as? OrdersCell else {
       fatalError()
     }
     cell.onBind(order: orders[indexPath.row], position: indexPath.row)
   }
   
-  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: false)
     viewModel.onOrderClick(indexPath.row, side)
   }
