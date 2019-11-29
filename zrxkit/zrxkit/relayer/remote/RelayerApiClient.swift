@@ -12,7 +12,7 @@ class RelayerApiClient {
   
   func getOrderBook(base: String, quote: String, networkId: Int = 3) -> Observable<OrderBookResponse> {
     let urlConvertible = RelayerNetworkClient.getOrderBook(url: "\(relayerConfig.url)/orderbook", baseAsset: base, quoteAsset: quote, networkId: networkId)
-    return request(urlConvertible)
+    return request(try! urlConvertible.asURLRequest())
   }
   
   func feeRecipients(networkId: Int = 3) -> Observable<FeeRecipientsResponse> {
@@ -25,27 +25,35 @@ class RelayerApiClient {
     return request(urlConvertible)
   }
   
-  func postOrder(order: SignedOrder, networkId: Int = 3) -> Observable<UInt> {
+  func postOrder(order: SignedOrder, networkId: Int) -> Observable<UInt> {
+    print("post order in \(#file)")
     let urlConvertible = RelayerNetworkClient.postOrder(url: "\(relayerConfig.url)/order", order: order, networkId: networkId)
-    return request(urlConvertible)
+    print(urlConvertible)
+    print(String(data: try! urlConvertible.asURLRequest().httpBody!, encoding: .utf8))
+    return request(try! urlConvertible.asURLRequest())
   }
   
   private func request<T: Codable>(_ urlConvertible: URLRequestConvertible) -> Observable<T> {
+    print("request \(urlConvertible)")
     return Observable<T>.create { observer in
       let request = Alamofire.request(urlConvertible).responseData(completionHandler: { (response) in
         switch response.result {
         case .success(let value):
           do {
+            print(String(data: value, encoding: .utf8))
             let decoded = try JSONDecoder().decode(T.self, from: value)
+            print(decoded)
             observer.onNext(decoded)
             observer.onCompleted()
           } catch {
+            print("cannot decode")
             observer.onError(error)
           }
         case .failure(let error):
+          print(error.localizedDescription)
           observer.onError(error)
         }
-      })      
+      })
       return Disposables.create {
         request.cancel()
       }
@@ -67,6 +75,10 @@ enum RelayerNetworkClient: URLRequestConvertible {
     case .getOrderBook(let inUrl, _, _, _):
       url = try inUrl.asURL()
       urlRequest = URLRequest(url: url)
+    case .postOrder(let inUrl, _, _):
+      url = try inUrl.asURL()
+      urlRequest = URLRequest(url: url)
+      urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
     default:
       fatalError()
     }
@@ -81,6 +93,7 @@ enum RelayerNetworkClient: URLRequestConvertible {
         urlRequest.url = urlComponents.url
       }
     }
+    
     
     urlRequest.httpMethod = method.rawValue
     urlRequest.httpBody = body

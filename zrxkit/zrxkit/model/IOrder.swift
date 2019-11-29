@@ -1,17 +1,17 @@
 import Foundation
 
 public protocol IOrder {
-  var exchangeAddress: String { get }
-  var makerAssetData: String { get }
-  var takerAssetData: String { get }
-  var makerAssetAmount: String { get }
-  var takerAssetAmount: String { get }
-  var makerAddress: String { get }
-  var takerAddress: String { get }
-  var expirationTimeSeconds: String { get }
-  var senderAddress: String { get }
-  var feeRecipientAddress: String { get }
-  var makerFee: String { get }
-  var takerFee: String { get }
-  var salt: String { get }
+  var exchangeAddress: String { get set }
+  var makerAssetData: String { get set }
+  var takerAssetData: String { get set }
+  var makerAssetAmount: String { get set }
+  var takerAssetAmount: String { get set }
+  var makerAddress: String { get set }
+  var takerAddress: String { get set }
+  var expirationTimeSeconds: String { get set }
+  var senderAddress: String { get set }
+  var feeRecipientAddress: String { get set }
+  var makerFee: String { get set }
+  var takerFee: String { get set }
+  var salt: String { get set }
 }

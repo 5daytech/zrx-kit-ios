@@ -1,4 +1,6 @@
 import UIKit
+import BigInt
+import Web3
 
 class CreateOrderController: UIViewController {
   
@@ -67,6 +69,6 @@ class CreateOrderController: UIViewController {
   }
   
   @IBAction func onCreateAction(_ sender: Any) {
-    
+    viewModel.createOrder(amount, price, side)
   }
 }

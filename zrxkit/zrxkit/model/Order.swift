@@ -26,4 +26,20 @@ public struct Order: IOrder, Codable {
   public var takerFee: String
   
   public var salt: String
+  
+  public init(exchangeAddress: String, makerAssetData: String, takerAssetData: String, makerAssetAmount: String, takerAssetAmount: String, makerAddress: String, takerAddress: String, expirationTimeSeconds: String, senderAddress: String, feeRecipientAddress: String, makerFee: String, takerFee: String, salt: String) {
+    self.exchangeAddress = exchangeAddress
+    self.makerAssetData = makerAssetData
+    self.takerAssetData = takerAssetData
+    self.makerAssetAmount = makerAssetAmount
+    self.takerAssetAmount = takerAssetAmount
+    self.makerAddress = makerAddress
+    self.takerAddress = takerAddress
+    self.expirationTimeSeconds = expirationTimeSeconds
+    self.senderAddress = senderAddress
+    self.feeRecipientAddress = feeRecipientAddress
+    self.makerFee = makerFee
+    self.takerFee = takerFee
+    self.salt = salt
+  }
 }

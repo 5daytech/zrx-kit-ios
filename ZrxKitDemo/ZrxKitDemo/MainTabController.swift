@@ -53,7 +53,7 @@ class MainTabController: UITabBarController {
     let transactionsNavigation = UINavigationController(rootViewController: transactionsController)
     transactionsNavigation.tabBarItem.title = "Transactions"
     
-    viewControllers = [balanceNavigation, transactionsNavigation, asksNavigation, bidsNavigation]
+    viewControllers = [balanceNavigation, transactionsNavigation, bidsNavigation, asksNavigation]
     
     let center = NotificationCenter.default
     center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)

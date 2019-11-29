@@ -5,9 +5,11 @@ import Web3
 public class Contract: GenericERC20Contract {
   
   let privateKey: EthereumPrivateKey
+  let networkType: ZrxKit.NetworkType
   
-  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey) {
+  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, networkType: ZrxKit.NetworkType) {
     self.privateKey = privateKey
+    self.networkType = networkType
     super.init(address: address, eth: eth)
   }
   
@@ -25,6 +27,7 @@ public class Contract: GenericERC20Contract {
         } else {
           observer.onError(ZrxError.emptyResponse)
         }
+        observer.onCompleted()
       })
       return Disposables.create()
     }
@@ -41,7 +44,7 @@ public class Contract: GenericERC20Contract {
           }
           
           do {
-            let signedTransaction = try transaction.sign(with: self.privateKey)            
+            let signedTransaction = try transaction.sign(with: self.privateKey, chainId: EthereumQuantity(quantity: BigUInt(self.networkType.id)))
             self.eth.sendRawTransaction(transaction: signedTransaction, response: { (hashResponse) in
               switch hashResponse.status {
               case .success(let result):
@@ -64,8 +67,10 @@ public class Contract: GenericERC20Contract {
   
   private func createTransaction(method: SolidityInvocation?, value: EthereumQuantity?, nonce: EthereumQuantity) -> EthereumTransaction? {
     if method != nil {
-      return method!.createTransaction(nonce: nonce, from: self.privateKey.address, value: value, gas: 500_000, gasPrice: EthereumQuantity(quantity: 21.gwei))
+      print("create transaction")
+      print(method)
+      return method!.createTransaction(nonce: nonce, from: self.privateKey.address, value: value, gas: 150000, gasPrice: EthereumQuantity(quantity: 21.gwei))
     }
-    return EthereumTransaction(nonce: nonce, gasPrice: EthereumQuantity(quantity: 21.gwei), gas: 500_000, to: address, value: value)
+    return EthereumTransaction(nonce: nonce, gasPrice: EthereumQuantity(quantity: 21.gwei), gas: 150_000, to: address, value: value)
   }
 }

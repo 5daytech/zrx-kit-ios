@@ -45,14 +45,16 @@ class MainViewModel {
   }
   
   init() {
-//    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
-    let words = "burden crumble violin flip multiply above usual dinner eight unusual clay identify".split(separator: " ").map { String($0) }
+    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
+//    let words = "burden crumble violin flip multiply above usual dinner eight unusual clay identify".split(separator: " ").map { String($0) }
     let seed = Mnemonic.seed(mnemonic: words)
-    let hdWallet = HDWallet(seed: seed, coinType: 60, xPrivKey: 0, xPubKey: 0)
+    let hdWallet = HDWallet(seed: seed, coinType: 1, xPrivKey: 0, xPubKey: 0)
     let privateKey = try! hdWallet.privateKey(account: 0, index: 0, chain: .external).raw
     
+    print(privateKey.toEIP55Address())
+    
     let pairs = [Pair<AssetItem, AssetItem>(first: ZrxKit.assetItemForAddress(address: tokenAddress), second: ZrxKit.assetItemForAddress(address: wethAddress))]
-    let config = RelayerConfig(baseUrl: "http://relayer.ropsten.fridayte.ch", suffix: "", version: "v2")
+    let config = RelayerConfig(baseUrl: "https://relayer.ropsten.fridayte.ch", suffix: "", version: "v2")
     let relayers = [Relayer(id: 0, name: "BDRelayer", availablePairs: pairs, feeRecipients: [feeRecipient], exchangeAddress: zrxKitNetworkType.exchangeAddress, config: config)]
     
     zrxKit = ZrxKit.getInstance(relayers: relayers, privateKey: privateKey, infuraKey: infuraCredentials.secret!)
@@ -180,25 +182,133 @@ class MainViewModel {
     checkAllowance()
   }
   
+  func createOrder(_ amount: Decimal, _ price: Decimal, _ side: EOrderSide) {
+    print(#function)
+    print(amount)
+    print(price * amount)
+    
+    let makerAmount = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
+    let takerAmount = BigUInt("\(amount * price * pow(10, decimals))", radix: 10)!
+    postOrder(makerAmount, takerAmount, side)
+  }
+  
+  func postOrder(_ makeAmount: BigUInt, _ takeAmount: BigUInt, _ side: EOrderSide) {
+    let expirationTime = "\(Int(Date().timeIntervalSince1970 + (60 * 60 * 24 * 3)))" // Order valid for 3 days
+    let firstCoinAsset = assetPair.first.assetData
+    let secondCoinAsset = assetPair.second.assetData
+    
+    let makerAsset: String
+    let takerAsset: String
+    let makerAssetAmount: String
+    let takerAssetAmount: String
+    
+    print(#function)
+    print(makeAmount)
+    print(takeAmount)
+    print(expirationTime)
+    print("\(Date().timeIntervalSince1970)")
+    
+    switch side {
+    case .ASK:
+      makerAsset = firstCoinAsset
+      takerAsset = secondCoinAsset
+      makerAssetAmount = "\(makeAmount)"
+      takerAssetAmount = "\(takeAmount)"
+    case .BID:
+      makerAsset = secondCoinAsset
+      takerAsset = firstCoinAsset
+      makerAssetAmount = "\(takeAmount)"
+      takerAssetAmount = "\(makeAmount)"
+    }
+    
+    let order = Order(exchangeAddress: zrxKitNetworkType.exchangeAddress,
+                      makerAssetData: makerAsset,
+                      takerAssetData: takerAsset,
+                      makerAssetAmount: makerAssetAmount,
+                      takerAssetAmount: takerAssetAmount,
+                      makerAddress: ethereumKit.receiveAddress,
+                      takerAddress: "0x0000000000000000000000000000000000000000",
+                      expirationTimeSeconds: expirationTime,
+                      senderAddress: "0x0000000000000000000000000000000000000000",
+                      feeRecipientAddress: feeRecipient,
+                      makerFee: "0",
+                      takerFee: "0",
+                      salt: "\(Int(Date().timeIntervalSince1970 * 1000))")
+   
+    
+    guard let signedOrder = zrxKit.signOrder(order) else {
+      return
+    }
+    print("THE END")
+    
+    print(#function)
+    checkAllowance()
+      .observeOn(MainScheduler.instance)
+      .subscribe(onNext: { (allowed) in
+        if allowed {
+          print("Allowed")
+          self.zrxKit.relayerManager.postOrder(relayerId: 0, order: signedOrder).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
+            print("on Next \(data)")
+          }, onError: { (err) in
+            print(err.localizedDescription)
+          }, onCompleted: {
+            print("completed")
+          }).disposed(by: self.disposeBag)
+        } else {
+          fatalError("Unlock tokens")
+        }
+      }, onError: { (err) in
+        print(err)
+      }, onCompleted: {
+        print("checkAllowanceComplete")
+      }).disposed(by: disposeBag)
+  }
+  
   private func checkAllowance() -> Observable<Bool> {
+    print(#function)
     let base = assetPair.first
     let quote = assetPair.second
-    
-    return checkCoinAllowance(base.address)
+    return Observable.create { observer in
+      observer.onNext(true)
+      return Disposables.create()
+    }
+//    return checkCoinAllowance(base.address)
+//      .flatMap { _ in self.checkCoinAllowance(quote.address) }
   }
   
   private func checkCoinAllowance(_ address: String) -> Observable<Bool> {
+    print(#function)
     let coinWrapper = zrxKit.getErc20ProxyInstance(tokenAddress: address)
-    coinWrapper.proxyAllowance(ownerAddress: EthereumAddress(hexString: address)!).subscribe(onNext: { (ethData) in
-      print(ethData)
-    }, onError: { (err) in
-      print(err)
-    }, onCompleted: {
-      print("Completed")
-    }).disposed(by: disposeBag)
-    
     return Observable.create { observer in
+      coinWrapper.proxyAllowance(ownerAddress: EthereumAddress(hexString: address)!).observeOn(MainScheduler.instance).subscribe(onNext: { (amount) in
+        print("\(address) allowance \(amount)")
+        if amount > BigUInt.zero {
+          print("amount > 0")
+          observer.onNext(true)
+        } else {
+          print("start setUnlimitedProxyAllowance")
+          coinWrapper.setUnlimitedProxyAllowance().observeOn(MainScheduler.instance)
+            .subscribe(onNext: { (ethData) in
+              print(ethData.hex())
+              print("setUnlimitedProxyAllowance onNext")
+              observer.onNext(true)
+            }, onError: { (err) in
+              print("setUnlimitedProxyAllowance")
+              print(err)
+              observer.onError(err)
+            }, onCompleted: {
+              print("setUnlimitedProxyAllowance completed")
+              observer.onCompleted()
+            }).disposed(by: self.disposeBag)
+        }
+      }, onError: { (err) in
+        print("proxy allowance")
+        observer.onError(err)
+      }, onCompleted: {
+        
+      }).disposed(by: self.disposeBag)
       return Disposables.create()
     }
+    
   }
 }

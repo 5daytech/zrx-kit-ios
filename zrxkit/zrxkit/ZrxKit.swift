@@ -36,7 +36,7 @@ public class ZrxKit {
     } else {
       address = EthereumAddress(hexString: networkType.wethAddress)!
     }
-    return WethWrapper(address: address, eth: web3.eth, privateKey: privateKey)
+    return WethWrapper(address: address, eth: web3.eth, privateKey: privateKey, networkType: networkType)
   }
   
   public func getErc20ProxyInstance(tokenAddress: String) -> Erc20ProxyWrapper {
@@ -44,7 +44,11 @@ public class ZrxKit {
   }
   
   public func getErc20ProxyInstance(tokenAddress: String, proxyAddress: String) -> Erc20ProxyWrapper {
-    return Erc20ProxyWrapper(address: EthereumAddress(hexString: tokenAddress)!, eth: web3.eth, privateKey: privateKey, proxyAddress: EthereumAddress(hexString: proxyAddress)!)
+    return Erc20ProxyWrapper(address: EthereumAddress(hexString: tokenAddress)!, eth: web3.eth, privateKey: privateKey, proxyAddress: EthereumAddress(hexString: proxyAddress)!, networkType: networkType)
+  }
+  
+  public func signOrder(_ order: Order) -> SignedOrder? {
+    return SignUtils().ecSignOrder(order, privateKey)
   }
   
   public enum NetworkType {
