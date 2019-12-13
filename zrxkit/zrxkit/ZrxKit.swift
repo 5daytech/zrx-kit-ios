@@ -19,7 +19,6 @@ public class ZrxKit {
   
   public let relayerManager: IRelayerManager
   private let privateKey: EthereumPrivateKey
-//  private let gasInfoProvider: ContractGasProvider
   private let networkType: NetworkType
   private let gasInfoProvider: ContractGasProvider
   private let web3: Web3
@@ -32,7 +31,7 @@ public class ZrxKit {
     web3 = Web3(rpcURL: networkType.getInfuraUrl(infuraKey: infuraKey))
   }
   
-  public func getWethWrapperInstance(wrapperAddress: String? = nil) -> WethWrapper {
+  public func getWethWrapperInstance(wrapperAddress: String? = nil) -> IWethWrapper {
     let address: EthereumAddress
     if wrapperAddress != nil {
       address = EthereumAddress(hexString: wrapperAddress!)!
