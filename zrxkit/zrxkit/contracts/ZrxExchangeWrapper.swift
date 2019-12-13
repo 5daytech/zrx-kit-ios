@@ -11,7 +11,76 @@ import RxSwift
 import Web3
 
 public class ZrxExchangeWrapper: Contract, IZrxExchange {
-  let disposeBag = DisposeBag()
+  public struct FillEventResponse {
+    let makerAddress: EthereumAddress
+    let feeRecipientAddress: EthereumAddress
+    let takerAddress: EthereumAddress
+    let senderAddress: EthereumAddress
+    let makerAssetFilledAmount: BigUInt
+    let takerAssetFilledAmount: BigUInt
+    let makerFeePaid: BigUInt
+    let takerFeePaid: BigUInt
+    let orderHash: Data
+    let makerAssetData: Data
+    let takerAssetData: Data
+    
+    init?(from dict: [String: Any]) {
+      guard let makerAddress = dict["makerAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.makerAddress = makerAddress
+      
+      guard let takerAddress = dict["takerAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.takerAddress = takerAddress
+      
+      guard let feeRecipientAddress = dict["feeRecipientAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.feeRecipientAddress = feeRecipientAddress
+      
+      guard let senderAddress = dict["senderAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.senderAddress = senderAddress
+      
+      guard let makerAssetFilledAmount = dict["makerAssetFilledAmount"] as? BigUInt else {
+        return nil
+      }
+      self.makerAssetFilledAmount = makerAssetFilledAmount
+      
+      guard let takerAssetFilledAmount = dict["takerAssetFilledAmount"] as? BigUInt else {
+        return nil
+      }
+      self.takerAssetFilledAmount = takerAssetFilledAmount
+      
+      guard let makerFeePaid = dict["makerFeePaid"] as? BigUInt else {
+        return nil
+      }
+      self.makerFeePaid = makerFeePaid
+      
+      guard let takerFeePaid = dict["takerFeePaid"] as? BigUInt else {
+        return nil
+      }
+      self.takerFeePaid = takerFeePaid
+      
+      guard let orderHash = dict["orderHash"] as? Data else {
+        return nil
+      }
+      self.orderHash = orderHash
+      
+      guard let makerAssetData = dict["makerAssetData"] as? Data else {
+        return nil
+      }
+      self.makerAssetData = makerAssetData
+      
+      guard let takerAssetData = dict["takerAssetData"] as? Data else {
+        return nil
+      }
+      self.takerAssetData = takerAssetData
+    }
+  }
   
   static var Fill: SolidityEvent {
     let inputs = [
@@ -34,24 +103,9 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return address?.hex(eip55: true) ?? ""
   }
   
-  private func getNonce() -> Observable<EthereumQuantity> {
-    return Observable.create { (observer) -> Disposable in
-      self.eth.getTransactionCount(address: self.address!, block: .latest) { (response) in
-        switch response.status {
-        case .success(let nonce):
-          observer.onNext(nonce)
-        case .failure(let err):
-          observer.onError(err)
-        }
-        observer.onCompleted()
-      }
-      return Disposables.create()
-    }
-  }
-  
   let tupleTypes: [SolidityType] = [.address, .address, .address, .address, .uint256, .uint256, .uint256, .uint256, .uint256, .uint256, .bytes(length: nil), .bytes(length: nil)]
   
-  public func marketBuyOrders(orders: [SignedOrder], fillAmount: BigUInt) -> Observable<EthereumData> {
+  public func marketBuyOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (FillEventResponse) -> Void) -> Observable<EthereumData> {
     let inputs: [SolidityFunctionParameter] = [
       SolidityFunctionParameter(name: "orders", type: .array(type: .tuple(tupleTypes), length: nil)),
       SolidityFunctionParameter(name: "makerAssetFillAmount", type: .uint256),
@@ -65,7 +119,18 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
     let ordersSignatures = orders.map { Data(hex: $0.signature.clearPrefix()) }
     let invocation = method.invoke(ordersInTuple, fillAmount, ordersSignatures)
-    return executeTransaction(invocation: invocation, value: nil)
+    
+    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { eventEmmited in
+      switch eventEmmited.name {
+      case ZrxExchangeWrapper.Fill.name:
+        guard let filled = FillEventResponse(from: eventEmmited.values) else {
+          return
+        }
+        onFill(filled)
+      default:
+        break
+      }
+    })
   }
   
   public func marketSellOrders(orders: [SignedOrder], fillAmount: BigUInt) -> Observable<String> {

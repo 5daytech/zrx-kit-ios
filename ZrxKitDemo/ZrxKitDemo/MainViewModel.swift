@@ -22,7 +22,7 @@ class MainViewModel {
   
   private let zrxKit: ZrxKit
   let ethereumKit: EthereumKit
-  let wethContract: WethWrapper
+  let wethContract: IWethWrapper
   private let ethereumAdapter: EthereumAdapter
   private let wethAdapter: Erc20Adapter
   private let tokenAdapter: Erc20Adapter
@@ -185,24 +185,22 @@ class MainViewModel {
     let amountBigUInt = BigUInt("\(rounded)", radix: 10)!
     checkAllowance().observeOn(MainScheduler.instance).subscribe(onNext: { (allowed) in
       if allowed {
-        switch side{
-        case .ASK:
-          self.zrxExchangeContract.marketBuyOrders(orders: [order], fillAmount: amountBigUInt).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
-            print(data.hex())
-          }, onError: { (err) in
-            print(err)
-          }, onCompleted: {
-            print("ASK Completed")
-          }).disposed(by: self.disposeBag)
-        case .BID:
-          self.zrxExchangeContract.marketBuyOrders(orders: [order], fillAmount: amountBigUInt).subscribeOn(MainScheduler.instance).subscribe(onNext: { (data) in
-            print(data.hex())
-          }, onError: { (err) in
-            print(err)
-          }, onCompleted: {
-            print("BID Completed")
-          }).disposed(by: self.disposeBag)
-        }
+        self.zrxExchangeContract.marketBuyOrders(orders: [order], fillAmount: amountBigUInt, onReceipt: { receipt in
+          if receipt.status == 1 {
+            print("Cool")
+          } else {
+            print("Error")
+          }
+        }, onFill: { response in
+          print(response)
+          print("Filled !!!")
+        }).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
+          print(data.hex())
+        }, onError: { (err) in
+          print(err)
+        }, onCompleted: {
+          print("Completed")
+        }).disposed(by: self.disposeBag)
       } else {
         print("Unlock tokens")
       }

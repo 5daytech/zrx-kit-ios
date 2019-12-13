@@ -131,7 +131,7 @@ public class TransactionWatcher {
   /// Events that we are expecting may be returned
   private(set) public var watchedEvents = Set<SolidityEvent>()
   
-  private let web3: Web3
+  private let eth: Web3.Eth
   private var timer: Timer?
   
   // MARK: - Initialization
@@ -141,9 +141,9 @@ public class TransactionWatcher {
   /// - Parameters:
   ///   - transactionHash: the hash of the transaction to watch (returned from sendTransaction())
   ///   - web3: the Web3 instance to use
-  public init(transactionHash: EthereumData, web3: Web3) {
+  public init(transactionHash: EthereumData, eth: Web3.Eth) {
     self.transactionHash = transactionHash
-    self.web3 = web3
+    self.eth = eth
     getTransactionReceipt()
   }
   
@@ -164,6 +164,16 @@ public class TransactionWatcher {
     }
   }
   
+  public func startWatching(events: [SolidityEvent]) {
+    events.forEach { (event) in
+      watchedEvents.insert(event)
+    }
+    
+    if let receipt = transactionReceipt {
+      checkForMatchingEvents(logs: receipt.logs)
+    }
+  }
+  
   /// Stops watching for a provided event
   ///
   /// - Parameter event: ABIEvent to stop watching
@@ -171,11 +181,17 @@ public class TransactionWatcher {
     watchedEvents.remove(event)
   }
   
+  public func stopWatching(events: [SolidityEvent]) {
+    events.forEach { (event) in
+      watchedEvents.remove(event)
+    }
+  }
+  
   // MARK: - Private Methods
   
   private func getTransactionReceipt() {
     guard self.transactionReceipt == nil else { return }
-    web3.eth.getTransactionReceipt(transactionHash: transactionHash) { (response) in
+    eth.getTransactionReceipt(transactionHash: transactionHash) { (response) in
       switch response.status {
       case .success(let receipt):
         if let receipt = receipt {
@@ -237,11 +253,11 @@ public class TransactionWatcher {
   }
   
   private func checkForBlocks() {
-    web3.eth.blockNumber { (response) in
+    eth.blockNumber { (response) in
       switch response.status {
       case .success(let blockNumber):
         self.currentBlock = blockNumber
-        self.web3.eth.getTransactionReceipt(transactionHash: self.transactionHash) { (response) in
+        self.eth.getTransactionReceipt(transactionHash: self.transactionHash) { (response) in
           switch response.status {
           case .success(let receipt):
             self.validateLatestReceipt(receipt, blockNumber: blockNumber)

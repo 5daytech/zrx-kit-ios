@@ -8,6 +8,10 @@ public class Contract: GenericERC20Contract {
   let networkType: ZrxKit.NetworkType
   let gasProvider: ContractGasProvider
   
+  private var onEventCallback: ((SolidityEmittedEvent) -> Void)?
+  private var onReceiptCallback: ((EthereumTransactionReceiptObject) -> Void)?
+  private var watchingEvents: [SolidityEvent]?
+  
   init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, gasProvider: ContractGasProvider, networkType: ZrxKit.NetworkType) {
     self.privateKey = privateKey
     self.networkType = networkType
@@ -35,11 +39,31 @@ public class Contract: GenericERC20Contract {
     }
   }
   
-  func executeTransaction(invocation: SolidityInvocation?, value: EthereumQuantity?, data: EthereumData = EthereumData([])) -> Observable<EthereumData> {
-    return executeTransaction(invocation: invocation, value: value, address: address!, data: data)
+  func executeTransaction(invocation: SolidityInvocation?,
+                          value: EthereumQuantity?,
+                          watchEvents: [SolidityEvent]? = nil,
+                          data: EthereumData = EthereumData([]),
+                          onReceipt: ((EthereumTransactionReceiptObject) -> Void)? = nil,
+                          onEvent: ((SolidityEmittedEvent) -> Void)? = nil) -> Observable<EthereumData> {
+    return executeTransaction(invocation: invocation,
+                              value: value,
+                              address: address!,
+                              watchEvents: watchEvents,
+                              data: data,
+                              onReceipt: onReceipt,
+                              onEvent: onEvent)
   }
   
-  func executeTransaction(invocation: SolidityInvocation?, value: EthereumQuantity?, address: EthereumAddress, data: EthereumData = EthereumData([])) -> Observable<EthereumData> {
+  func executeTransaction(invocation: SolidityInvocation?,
+                          value: EthereumQuantity?,
+                          address: EthereumAddress,
+                          watchEvents: [SolidityEvent]? = nil,
+                          data: EthereumData = EthereumData([]),
+                          onReceipt: ((EthereumTransactionReceiptObject) -> Void)? = nil,
+                          onEvent: ((SolidityEmittedEvent) -> Void)? = nil) -> Observable<EthereumData> {
+    onReceiptCallback = onReceipt
+    onEventCallback = onEvent
+    watchingEvents = watchEvents
     return Observable.create { observer in
       self.eth.getTransactionCount(address: self.privateKey.address, block: .latest, response: { (nonce) in
         switch nonce.status {
@@ -53,6 +77,11 @@ public class Contract: GenericERC20Contract {
             self.eth.sendRawTransaction(transaction: signedTransaction, response: { (hashResponse) in
               switch hashResponse.status {
               case .success(let result):
+                if self.watchingEvents != nil {
+                  let watcher = TransactionWatcher(transactionHash: result, eth: self.eth)
+                  watcher.delegate = self
+                  watcher.startWatching(events: self.watchingEvents!)
+                }
                 observer.onNext(result)
                 observer.onCompleted()
               case .failure(let error):
@@ -87,5 +116,23 @@ public class Contract: GenericERC20Contract {
       to: address,
       value: value ?? 0,
       data: data)
+  }
+}
+
+extension Contract: TransactionWatcherDelegate {
+  public func transactionWatcher(_ transactionWatcher: TransactionWatcher, didUpdateStatus status: TransactionWatcher.Status) {
+    print("\(#file) didUpdateStatus \(status)")
+  }
+  
+  public func transactionWatcher(_ transactionWatcher: TransactionWatcher, didReceiveReceipt receipt: EthereumTransactionReceiptObject) {
+    onReceiptCallback?(receipt)
+  }
+  
+  public func transactionWatcher(_ transactionWatcher: TransactionWatcher, didReceiveEvent event: SolidityEmittedEvent) {
+    print("\(#file) didReceiveEvent \(event)")
+    onEventCallback?(event)
+    if watchingEvents != nil {
+      transactionWatcher.stopWatching(events: watchingEvents!)
+    }
   }
 }
