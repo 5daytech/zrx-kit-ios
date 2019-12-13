@@ -82,6 +82,48 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     }
   }
   
+  public struct CancelEventResponse {
+    let makerAddress: EthereumAddress
+    let feeRecipientAddress: EthereumAddress
+    let senderAddress: EthereumAddress
+    let orderHash: Data
+    let makerAssetData: Data
+    let takerAssetData: Data
+    
+    init?(from dict: [String: Any]) {
+      guard let makerAddress = dict["makerAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.makerAddress = makerAddress
+      
+      guard let feeRecipientAddress = dict["feeRecipientAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.feeRecipientAddress = feeRecipientAddress
+      
+      guard let senderAddress = dict["senderAddress"] as? EthereumAddress else {
+        return nil
+      }
+      self.senderAddress = senderAddress
+      
+      guard let orderHash = dict["orderHash"] as? Data else {
+        return nil
+      }
+      self.orderHash = orderHash
+      
+      guard let makerAssetData = dict["makerAssetData"] as? Data else {
+        return nil
+      }
+      self.makerAssetData = makerAssetData
+      
+      guard let takerAssetData = dict["takerAssetData"] as? Data else {
+        return nil
+      }
+      self.takerAssetData = takerAssetData
+    }
+  }
+  
+  
   static var Fill: SolidityEvent {
     let inputs = [
       SolidityEvent.Parameter(name: "makerAddress", type: .address, indexed: true),
@@ -97,6 +139,18 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
       SolidityEvent.Parameter(name: "takerAssetData", type: .bytes(length: nil), indexed: false)
     ]
     return SolidityEvent(name: "Fill", anonymous: false, inputs: inputs)
+  }
+  
+  static var Cancel: SolidityEvent {
+    let inputs = [
+      SolidityEvent.Parameter(name: "makerAddress", type: .address, indexed: true),
+      SolidityEvent.Parameter(name: "feeRecipientAddress", type: .address, indexed: true),
+      SolidityEvent.Parameter(name: "senderAddress", type: .address, indexed: false),
+      SolidityEvent.Parameter(name: "orderHash", type: .bytes(length: 32), indexed: true),
+      SolidityEvent.Parameter(name: "makerAssetData", type: .bytes(length: nil), indexed: false),
+      SolidityEvent.Parameter(name: "takerAssetData", type: .bytes(length: nil), indexed: false)
+    ]
+    return SolidityEvent(name: "Cancel", anonymous: false, inputs: inputs)
   }
   
   public var contractAddress: String {
@@ -156,10 +210,14 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
-  public func cancelOrder(order: SignedOrder) -> Observable<String> {
-    return Observable.create { (observer) -> Disposable in
-      return Disposables.create()
-    }
+  public func cancelOrder(order: SignedOrder, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void) -> Observable<EthereumData> {
+    let inputs: [SolidityFunctionParameter] = [
+      SolidityFunctionParameter(name: "order", type: .tuple(orderTypes))
+    ]
+    let method = SolidityNonPayableFunction(name: "cancelOrder", inputs: inputs, outputs: [], handler: self)
+    let orderInTuple = SolidityTuple(order.getSolWrappedValues())
+    let invocation = method.invoke(orderInTuple)
+    return executeTransactionForCancelEvent(invocation: invocation, onReceipt: onReceipt, onCancel: onCancel)
   }
   
   public func batchCancelOrders(order: [SignedOrder]) -> Observable<String> {
@@ -174,11 +232,14 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     }
   }
   
-  private func executeTransactionForFillEvent(invocation: SolidityInvocation, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
-    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { eventEmmited in
-      switch eventEmmited.name {
+  private func executeTransactionForFillEvent(
+    invocation: SolidityInvocation,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
+    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { emitedEvent in
+      switch emitedEvent.name {
       case ZrxExchangeWrapper.Fill.name:
-        guard let filled = FillEventResponse(from: eventEmmited.values) else {
+        guard let filled = FillEventResponse(from: emitedEvent.values) else {
           return
         }
         onFill(filled)
@@ -186,5 +247,22 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
         break
       }
     })
+  }
+  
+  private func executeTransactionForCancelEvent(
+    invocation: SolidityInvocation,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void) -> Observable<EthereumData> {
+    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Cancel], onReceipt: onReceipt) { (emitedEvent) in
+      switch emitedEvent.name {
+      case ZrxExchangeWrapper.Cancel.name:
+        guard let cancel = CancelEventResponse(from: emitedEvent.values) else {
+          return
+        }
+        onCancel(cancel)
+      default:
+        break
+      }
+    }
   }
 }
