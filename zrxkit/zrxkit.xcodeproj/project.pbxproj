@@ -12,6 +12,7 @@
 		B5007F442362B392005218BA /* Eip712Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5007F432362B392005218BA /* Eip712Data.swift */; };
 		B5007F462362B9D3005218BA /* Extension+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5007F452362B9D3005218BA /* Extension+String.swift */; };
 		B5007F482362BE93005218BA /* Eip712Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5007F472362BE93005218BA /* Eip712Encoder.swift */; };
+		B53E6D6023A3747000A2A10E /* TransactionWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53E6D5F23A3747000A2A10E /* TransactionWatcher.swift */; };
 		B53FF4462398EA87009D131B /* zrxkitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FF4452398EA87009D131B /* zrxkitTests.swift */; };
 		B53FF4482398EA87009D131B /* zrxkit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D3A66E23153FFC004B07D9 /* zrxkit.framework */; };
 		B543F1A5239FC8E70096ABD5 /* Contracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B543F1A4239FC8E70096ABD5 /* Contracts.swift */; };
@@ -64,6 +65,7 @@
 		B5007F432362B392005218BA /* Eip712Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eip712Data.swift; sourceTree = "<group>"; };
 		B5007F452362B9D3005218BA /* Extension+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
 		B5007F472362BE93005218BA /* Eip712Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eip712Encoder.swift; sourceTree = "<group>"; };
+		B53E6D5F23A3747000A2A10E /* TransactionWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionWatcher.swift; sourceTree = "<group>"; };
 		B53FF4432398EA87009D131B /* zrxkitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = zrxkitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B53FF4452398EA87009D131B /* zrxkitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = zrxkitTests.swift; sourceTree = "<group>"; };
 		B53FF4472398EA87009D131B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				B54C274F238B92DC0043EA9B /* TypeEncoder.swift */,
 				B54C2751238FC9940043EA9B /* Constants.swift */,
 				B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */,
+				B53E6D5F23A3747000A2A10E /* TransactionWatcher.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -467,6 +470,7 @@
 				B5D3A6AE23192A90004B07D9 /* Relayer.swift in Sources */,
 				B54C2752238FC9940043EA9B /* Constants.swift in Sources */,
 				B5A9BBB12322220600DF756B /* SignedOrder.swift in Sources */,
+				B53E6D6023A3747000A2A10E /* TransactionWatcher.swift in Sources */,
 				B5A4DA392328B0F900E9766A /* OrderBookResponse.swift in Sources */,
 				B5A9BBAD2322202300DF756B /* Order.swift in Sources */,
 				B5A9BBB3232222EE00DF756B /* AssetPair.swift in Sources */,
