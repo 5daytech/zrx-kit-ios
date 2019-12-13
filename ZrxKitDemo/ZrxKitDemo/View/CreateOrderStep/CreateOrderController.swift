@@ -2,7 +2,7 @@ import UIKit
 import BigInt
 import Web3
 
-class CreateOrderController: UIViewController {
+class CreateOrderController: CardViewController {
   
   static func instance(_ side: EOrderSide, _ viewModel: MainViewModel) -> CreateOrderController {
     let view = CreateOrderController()
@@ -11,9 +11,17 @@ class CreateOrderController: UIViewController {
     return view
   }
   
-  static let expandedHeight: CGFloat = 300
-  static let collapsedHeight: CGFloat = 0
-  static let animationDuration: CFloat = 0.9
+  override var expandedHeight: CGFloat {
+    return 300
+  }
+  
+  override var collapsedHeight: CGFloat {
+    return 0
+  }
+  
+  override var animationDuration: TimeInterval {
+    return 0.5
+  }
   
   @IBOutlet weak var totalPriceLbl: UILabel!
   @IBOutlet weak var perTokenPriceField: UITextField!

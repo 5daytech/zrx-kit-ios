@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import zrxkit
 
 class MainTabController: UITabBarController {
   
@@ -17,7 +18,6 @@ class MainTabController: UITabBarController {
     case keyboardCollapsed
   }
   
-  let animationDuration: TimeInterval = 0.9
   var cardVisible = false
   var nextState: CardState {
     return cardVisible ? .collapsed : .expanded
@@ -26,7 +26,7 @@ class MainTabController: UITabBarController {
   var runningAnimations = [UIViewPropertyAnimator]()
   var animationProgressWhenInterapted: CGFloat = 0
   var visualEffectView: UIVisualEffectView!
-  var createOrderController: CreateOrderController!
+  var cardViewController: CardViewController!
   let cardViewSpacing: CGFloat = 16
   
   let viewModel = MainViewModel()
@@ -62,42 +62,42 @@ class MainTabController: UITabBarController {
   @objc private func keyboardWillShow(_ notification: Notification) {
     let userInfo = notification.userInfo
     let frame  = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-    if createOrderController != nil {
+    if cardViewController != nil {
       animateTransitionIfNeeded(state: .keyboardExpanded(frame.height), duration: 0.5)
     }
   }
   
   @objc private func keyboardWillHide(_ notification: Notification) {
-    if createOrderController != nil {
+    if cardViewController != nil {
       animateTransitionIfNeeded(state: .keyboardCollapsed, duration: 0.5)
     }
   }
   
-  func setupCreateOrder(_ side: EOrderSide) {
+  func setupCardViewController(_ side: EOrderSide, _ vc: CardViewController) {
     visualEffectView = UIVisualEffectView()
     visualEffectView.frame = self.view.frame
     self.view.addSubview(visualEffectView)
     
-    createOrderController = CreateOrderController.instance(side, viewModel)
-    self.addChild(createOrderController)
-    self.view.addSubview(createOrderController.view)
+    cardViewController = vc
     
-    createOrderController.view.frame = CGRect(x: self.cardViewSpacing, y: self.view.frame.height - CreateOrderController.collapsedHeight, width: self.view.bounds.width - (2 * self.cardViewSpacing), height: CreateOrderController.expandedHeight)
+    self.addChild(cardViewController)
+    self.view.addSubview(cardViewController.view)
     
-    createOrderController.view.clipsToBounds = true
+    cardViewController.view.frame = CGRect(x: self.cardViewSpacing, y: self.view.frame.height - cardViewController.collapsedHeight, width: self.view.bounds.width - (2 * self.cardViewSpacing), height: cardViewController.expandedHeight)
+    
+    cardViewController.view.clipsToBounds = true
     
     let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleCardTap(recognizer:)))
-    
     let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleCardPan(recognizer:)))
     
-    createOrderController.view.addGestureRecognizer(tapGestureRecognizer)
-    createOrderController.view.addGestureRecognizer(panGestureRecognizer)
+    cardViewController.view.addGestureRecognizer(tapGestureRecognizer)
+    cardViewController.view.addGestureRecognizer(panGestureRecognizer)
   }
   
   @objc func handleCardTap(recognizer: UITapGestureRecognizer) {
     switch recognizer.state {
     case .ended:
-      animateTransitionIfNeeded(state: nextState, duration: animationDuration)
+      animateTransitionIfNeeded(state: nextState, duration: cardViewController!.animationDuration)
     default:
       break
     }
@@ -106,10 +106,10 @@ class MainTabController: UITabBarController {
   @objc func handleCardPan(recognizer: UIPanGestureRecognizer) {
     switch recognizer.state {
     case .began:
-      startInteractiveTransition(state: nextState, duration: animationDuration)
+      startInteractiveTransition(state: nextState, duration: cardViewController!.animationDuration)
     case .changed:
-      let translation = recognizer.translation(in: self.createOrderController.view)
-      var fractionComplete = translation.y / CreateOrderController.expandedHeight
+      let translation = recognizer.translation(in: self.cardViewController.view)
+      var fractionComplete = translation.y / cardViewController.expandedHeight
       fractionComplete = cardVisible ? fractionComplete : -fractionComplete
       updateInteractiveTransition(fractionCompleted: fractionComplete)
     case .ended:
@@ -124,13 +124,13 @@ class MainTabController: UITabBarController {
       let frameAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1) {
         switch state {
         case .expanded:
-          self.createOrderController.view.frame.origin.y = self.view.frame.height - CreateOrderController.expandedHeight - self.cardViewSpacing
+          self.cardViewController.view.frame.origin.y = self.view.frame.height - self.cardViewController.expandedHeight - self.cardViewSpacing
         case .collapsed:
-          self.createOrderController.view.frame.origin.y = self.view.frame.height - CreateOrderController.collapsedHeight
+          self.cardViewController.view.frame.origin.y = self.view.frame.height - self.cardViewController.collapsedHeight
         case .keyboardExpanded(let keyboardHeight):
-          self.createOrderController.view.frame.origin.y = self.view.frame.height - CreateOrderController.expandedHeight - keyboardHeight - self.cardViewSpacing
+          self.cardViewController.view.frame.origin.y = self.view.frame.height - self.cardViewController.expandedHeight - keyboardHeight - self.cardViewSpacing
         case .keyboardCollapsed:
-          self.createOrderController.view.frame.origin.y = self.view.frame.height - CreateOrderController.expandedHeight
+          self.cardViewController.view.frame.origin.y = self.view.frame.height - self.cardViewController.expandedHeight
         }
       }
       
@@ -144,11 +144,11 @@ class MainTabController: UITabBarController {
           break
         }
         self.runningAnimations.removeAll()
-        if !self.cardVisible && self.createOrderController != nil {
-          self.createOrderController.removeFromParent()
-          self.createOrderController.view.removeFromSuperview()
+        if !self.cardVisible && self.cardViewController != nil {
+          self.cardViewController.removeFromParent()
+          self.cardViewController.view.removeFromSuperview()
           self.visualEffectView.removeFromSuperview()
-          self.createOrderController = nil
+          self.cardViewController = nil
         }
       }
       
@@ -158,9 +158,9 @@ class MainTabController: UITabBarController {
       let cornerRadiusAnimator = UIViewPropertyAnimator(duration: duration, curve: .linear) {
         switch state {
         case .collapsed:
-          self.createOrderController.view.layer.cornerRadius = 0
+          self.cardViewController.view.layer.cornerRadius = 0
         case .expanded:
-          self.createOrderController.view.layer.cornerRadius = 12
+          self.cardViewController.view.layer.cornerRadius = 12
         default:
           break
         }
@@ -211,7 +211,14 @@ class MainTabController: UITabBarController {
 
 extension MainTabController: OrdersControllerDelegate {
   func showCreateOrderStep(_ side: EOrderSide) {
-    setupCreateOrder(side)
-    animateTransitionIfNeeded(state: nextState, duration: animationDuration)
+    let vc = CreateOrderController.instance(side, viewModel)
+    setupCardViewController(side, vc)
+    animateTransitionIfNeeded(state: nextState, duration: vc.animationDuration)
+  }
+  
+  func showConfirmOrderStep(_ side: EOrderSide, _ order: SignedOrder) {
+    let vc = ConfirmOrderController.instance(viewModel: viewModel, order, side)
+    setupCardViewController(side, vc)
+    animateTransitionIfNeeded(state: nextState, duration: vc.animationDuration)
   }
 }

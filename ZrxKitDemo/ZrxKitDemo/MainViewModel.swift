@@ -194,6 +194,7 @@ class MainViewModel {
         }, onFill: { response in
           print(response)
           print("Filled !!!")
+          self.refreshOrders()
         }).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
           print(data.hex())
         }, onError: { (err) in
@@ -215,6 +216,26 @@ class MainViewModel {
     let makerAmount = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
     let takerAmount = BigUInt("\(amount * price * pow(10, decimals))", radix: 10)!
     postOrder(makerAmount, takerAmount, side)
+  }
+  
+  func cancelOrder(_ order: SignedOrder) {
+    zrxExchangeContract.cancelOrder(order: order, onReceipt: { (receipt) in
+      if receipt.status == 1 {
+        print("Cool")
+      } else {
+        print("Error")
+      }
+    }, onCancel:  { (response) in
+      print(response)
+      print("Canceled !!!")
+      self.refreshOrders()
+    }).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
+      print(data.hex())
+    }, onError: { (err) in
+      print(err)
+    }, onCompleted: {
+      print("cancel completed")
+      }).disposed(by: disposeBag)
   }
   
   func wrapEther(_ amount: Decimal) {
@@ -287,6 +308,7 @@ class MainViewModel {
       .subscribe(onNext: { (allowed) in
         if allowed {
           self.zrxKit.relayerManager.postOrder(relayerId: 0, order: signedOrder).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
+            self.refreshOrders()
           }, onError: { (err) in
             print("error on posting order")
             print(err)

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		85F3088FE867C0F71EA1E95B /* Pods_ZrxKitDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA4CC97DF829DE22DEC3C8D /* Pods_ZrxKitDemo.framework */; };
+		B53E6D6223A3B3C000A2A10E /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53E6D6123A3B3C000A2A10E /* CardViewController.swift */; };
 		B53FF458239E316A009D131B /* BalanceController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B53FF457239E316A009D131B /* BalanceController.xib */; };
 		B53FF45A239E321F009D131B /* BalanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FF459239E321F009D131B /* BalanceController.swift */; };
 		B5545A792338A79600359873 /* BalanceControllerTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5545A782338A79600359873 /* BalanceControllerTable.swift */; };
@@ -58,6 +59,7 @@
 /* Begin PBXFileReference section */
 		0AA240D35795EA21C8329581 /* Pods-ZrxKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZrxKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-ZrxKitDemo/Pods-ZrxKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		75C6A83F78F4366969E05E93 /* Pods-ZrxKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZrxKitDemo.release.xcconfig"; path = "Target Support Files/Pods-ZrxKitDemo/Pods-ZrxKitDemo.release.xcconfig"; sourceTree = "<group>"; };
+		B53E6D6123A3B3C000A2A10E /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		B53FF457239E316A009D131B /* BalanceController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceController.xib; sourceTree = "<group>"; };
 		B53FF459239E321F009D131B /* BalanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceController.swift; sourceTree = "<group>"; };
 		B5545A782338A79600359873 /* BalanceControllerTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceControllerTable.swift; sourceTree = "<group>"; };
@@ -240,6 +242,7 @@
 				B5F1C7602344A1DF0011442B /* Transactions */,
 				B57DB742233CA1D5008ED1EE /* Orders */,
 				B5545A862338AD1400359873 /* Balance */,
+				B53E6D6123A3B3C000A2A10E /* CardViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				B5F2F16B2333BB1C001D4926 /* OrdersController.swift in Sources */,
 				B5A9BB9123221B6E00DF756B /* AppDelegate.swift in Sources */,
 				B57DB744233CA1F3008ED1EE /* OrdersCell.swift in Sources */,
+				B53E6D6223A3B3C000A2A10E /* CardViewController.swift in Sources */,
 				B5545A8E2338B47400359873 /* EOrderSide.swift in Sources */,
 				B5545A882338AD2300359873 /* BalanceCell.swift in Sources */,
 				B5F1C76D2345F36F0011442B /* ConfirmOrderController.swift in Sources */,

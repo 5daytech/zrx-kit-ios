@@ -12,6 +12,7 @@ import zrxkit
 
 protocol OrdersControllerDelegate {
   func showCreateOrderStep(_ side: EOrderSide)
+  func showConfirmOrderStep(_ side: EOrderSide, _ order: SignedOrder)
 }
 
 class OrdersController: UIViewController {
@@ -51,9 +52,8 @@ class OrdersController: UIViewController {
     }).disposed(by: disposeBag)
     
     viewModel.orderInfoEvent.subscribe { (event) in
-      let view = ConfirmOrderController.instance(viewModel: self.viewModel, event.element!.first, event.element!.second)
-      view.modalPresentationStyle = .overCurrentContext
-      self.present(view, animated: true, completion: nil)
+      
+      
     }.disposed(by: disposeBag)
     
     viewModel.refreshOrders()
@@ -91,6 +91,6 @@ extension OrdersController: UITableViewDelegate, UITableViewDataSource {
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: false)
-    viewModel.onOrderClick(indexPath.row, side)
+    delegate?.showConfirmOrderStep(side, orders[indexPath.row])
   }
 }

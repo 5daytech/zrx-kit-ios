@@ -10,7 +10,7 @@ import UIKit
 import zrxkit
 import BigInt
 
-class ConfirmOrderController: UIViewController {
+class ConfirmOrderController: CardViewController {
   
   static func instance(viewModel: MainViewModel, _ order: SignedOrder, _ side: EOrderSide) -> ConfirmOrderController {
     let view = ConfirmOrderController()
@@ -31,12 +31,20 @@ class ConfirmOrderController: UIViewController {
     return view
   }
   
+  override var expandedHeight: CGFloat {
+    return 300
+  }
+  
+  override var animationDuration: TimeInterval {
+    return 0.5
+  }
+  
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var amountLabel: UILabel!
   @IBOutlet weak var perTokenLabel: UILabel!
   @IBOutlet weak var fillAmountField: UITextField!
   @IBOutlet weak var totalLabel: UILabel!
-  @IBOutlet weak var bottomConstraint: NSLayoutConstraint!
+  @IBOutlet weak var tradeButton: UIButton!
   
   private var side: EOrderSide!
   private var order: SignedOrder!
@@ -44,6 +52,8 @@ class ConfirmOrderController: UIViewController {
   private var makerAmount: Decimal!
   private var takerAmount: Decimal!
   private var viewModel: MainViewModel!
+  
+  private var isMyOrder: Bool = false
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -59,30 +69,21 @@ class ConfirmOrderController: UIViewController {
     
     perTokenLabel.text = "Per token: \(price!) WETH"
     
+    isMyOrder = order.makerAddress == viewModel.ethereumKit.receiveAddress.lowercased()
     
-    let center = NotificationCenter.default
-    center.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-    center.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-    
-  }
-  
-  @objc private func keyboardWillShow(_ notification: Notification) {
-    let userInfo = notification.userInfo
-    let frame  = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-    let contentInset = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
-    bottomConstraint.constant = contentInset.bottom
-  }
-  
-  @objc private func keyboardWillHide(_ notification: Notification) {
-    bottomConstraint.constant = 0
-  }
-  
+    tradeButton.setTitle(isMyOrder ? "Cancel" : "Trade", for: .normal)
+  }  
   
   @IBAction func onTradeAction(_ sender: UIButton) {
-    if getAmount() > 0 {
-      let amount = side == .ASK ? getAmount() : getAmount() * price
-      viewModel.fillOrder(order, side, amount)
+    if isMyOrder {
+      viewModel.cancelOrder(order)
       dismiss(animated: true, completion: nil)
+    } else {
+      if getAmount() > 0 {
+        let amount = side == .ASK ? getAmount() : getAmount() * price
+        viewModel.fillOrder(order, side, amount)
+        dismiss(animated: true, completion: nil)
+      }
     }
   }
   
