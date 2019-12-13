@@ -10,14 +10,19 @@ def common_pods
     pod 'BigInt', '~> 4.0'
     pod 'RxSwift', '~> 5'
     pod 'RxCocoa', '~> 5'
-    pod 'Web3'
-    pod 'Web3/ContractABI'
+    pod 'Web3', git: 'https://github.com/abaikirov/Web3.swift'
+    pod 'Web3/ContractABI', git: 'https://github.com/abaikirov/Web3.swift'
     pod 'Alamofire', '~> 4.0'
 end
 
 target :zrxkit do
     project 'zrxkit/zrxkit'
     common_pods
+end
+
+target :zrxkitTests do
+  project 'zrxkit/zrxkit'
+  common_pods
 end
 
 target :ZrxKitDemo do

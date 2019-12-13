@@ -1,22 +1,36 @@
+//
+//  BalanceController.swift
+//  ZrxKitDemo
+//
+//  Created by Abai Abakirov on 12/9/19.
+//  Copyright © 2019 BlocksDecoded. All rights reserved.
+//
+
 import UIKit
 import RxSwift
-import EthereumKit
 
-class BalanceController: UITableViewController {
-  let disposeBag = DisposeBag()
+class BalanceController: UIViewController {
+  static func instance(viewModel: MainViewModel) -> BalanceController {
+    let view = BalanceController()
+    view.viewModel = viewModel
+    return view
+  }
   
-  var viewModel: MainViewModel!
+  let disposeBag = DisposeBag()
+  private var viewModel: MainViewModel!
+  @IBOutlet weak var ethLabel: UILabel!
+  @IBOutlet weak var wethLabel: UILabel!
+  @IBOutlet weak var tokenLabel: UILabel!
+  @IBOutlet weak var lastBlockLabel: UILabel!
+  @IBOutlet weak var ethAmountField: UITextField!
+  @IBOutlet weak var wethAmountField: UITextField!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh", style: .plain, target: self, action: #selector(refresh))
     
-    tableView.register(UINib(nibName: String(describing: BalanceCell.self), bundle: Bundle(for: BalanceCell.self)), forCellReuseIdentifier: String(describing: BalanceCell.self))
-    tableView.tableFooterView = UIView()
-    tableView.separatorInset = .zero
-    
     for (index, adapter) in viewModel.adapters.enumerated() {
-      Observable.merge([adapter.lastBlockHeightObservable, adapter.syncStateObservable, adapter.balanceObservable])
+    Observable.merge([adapter.lastBlockHeightObservable, adapter.syncStateObservable, adapter.balanceObservable])
         .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
         .observeOn(MainScheduler.instance)
         .subscribe(onNext: { [weak self] in
@@ -24,33 +38,46 @@ class BalanceController: UITableViewController {
         })
         .disposed(by: disposeBag)
     }
-    
-    print(viewModel.ethereumKit.receiveAddress)
+  }
+  
+  private func update(index: Int) {
+    let adapter = viewModel.adapters[index]
+    switch index {
+    case 0:
+      ethLabel.text = "ETH: \(adapter.balance)"
+    case 1:
+      wethLabel.text = "WETH: \(adapter.balance)"
+    case 2:
+      tokenLabel.text = "ZRX: \(adapter.balance)"
+    default:
+      break
+    }
+    lastBlockLabel.text = "Last block: \(adapter.lastBlockHeight.map { "\($0)" } ?? "n/a")"
   }
   
   @objc func refresh() {
     viewModel.ethereumKit.refresh()
   }
   
-  private func update(index: Int) {
-    tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+  @IBAction func wrapAction(_ sender: Any) {
+    guard let amountStr = ethAmountField.text else {
+      return
+    }
+    if let wrapAmount = Decimal(string: amountStr) {
+      viewModel.wrapEther(wrapAmount)
+    } else {
+      print("Invalid input amount")
+    }
   }
   
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return viewModel.adapters.count
-  }
-  
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 140
-  }
-  
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    return tableView.dequeueReusableCell(withIdentifier: String(describing: BalanceCell.self), for: indexPath)
-  }
-  
-  override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    if let cell = cell as? BalanceCell {
-      cell.bind(adapter: viewModel.adapters[indexPath.row])
+  @IBAction func unwrapAction(_ sender: Any) {
+    guard let amountStr = wethAmountField.text else {
+      return
+    }
+    if let unwrapAmount = Decimal(string: amountStr) {
+      viewModel.unwrapEther(unwrapAmount)
+    } else {
+      print("Invalid input amount")
     }
   }
 }

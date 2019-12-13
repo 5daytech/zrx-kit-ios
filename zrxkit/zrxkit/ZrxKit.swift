@@ -3,13 +3,14 @@ import BigInt
 import Web3
 
 public class ZrxKit {
+  static public let defaultGasProvider = GasInfoProvider()
   static private let minAmount = BigUInt(0)
   static private let maxAmount = BigUInt(999999999999999999)
   
-  public static func getInstance(relayers: [Relayer], privateKey: Data, infuraKey: String, networkType: NetworkType = .Ropsten) -> ZrxKit {
+  public static func getInstance(relayers: [Relayer], privateKey: Data, infuraKey: String, networkType: NetworkType = .Ropsten, gasInfoProvider: ContractGasProvider = defaultGasProvider) -> ZrxKit {
     let relayerManager = RelayerManager(availableRelayers: relayers, networkType: networkType)
     let ethereumPrivateKey = try! EthereumPrivateKey(hexPrivateKey: privateKey.toHexString())
-    return ZrxKit(relayerManager: relayerManager, privateKey: ethereumPrivateKey, infuraKey: infuraKey, networkType: networkType)
+    return ZrxKit(relayerManager: relayerManager, privateKey: ethereumPrivateKey, infuraKey: infuraKey, networkType: networkType, gasInfoProvider: gasInfoProvider)
   }
   
   public static func assetItemForAddress(address: String, type: EAssetProxyId = EAssetProxyId.ERC20) -> AssetItem {
@@ -20,12 +21,14 @@ public class ZrxKit {
   private let privateKey: EthereumPrivateKey
 //  private let gasInfoProvider: ContractGasProvider
   private let networkType: NetworkType
+  private let gasInfoProvider: ContractGasProvider
   private let web3: Web3
   
-  private init(relayerManager: IRelayerManager, privateKey: EthereumPrivateKey, infuraKey: String, networkType: NetworkType) {
+  private init(relayerManager: IRelayerManager, privateKey: EthereumPrivateKey, infuraKey: String, networkType: NetworkType, gasInfoProvider: ContractGasProvider) {
     self.relayerManager = relayerManager
     self.privateKey = privateKey
     self.networkType = networkType
+    self.gasInfoProvider = gasInfoProvider
     web3 = Web3(rpcURL: networkType.getInfuraUrl(infuraKey: infuraKey))
   }
   
@@ -36,15 +39,23 @@ public class ZrxKit {
     } else {
       address = EthereumAddress(hexString: networkType.wethAddress)!
     }
-    return WethWrapper(address: address, eth: web3.eth, privateKey: privateKey, networkType: networkType)
+    return WethWrapper(address: address, eth: web3.eth, privateKey: privateKey, gasProvider: gasInfoProvider, networkType: networkType)
   }
   
-  public func getErc20ProxyInstance(tokenAddress: String) -> Erc20ProxyWrapper {
+  public func getErc20ProxyInstance(tokenAddress: String) -> IErc20Proxy {
     return getErc20ProxyInstance(tokenAddress: tokenAddress, proxyAddress: networkType.erc20ProxyAddress)
   }
   
-  public func getErc20ProxyInstance(tokenAddress: String, proxyAddress: String) -> Erc20ProxyWrapper {
-    return Erc20ProxyWrapper(address: EthereumAddress(hexString: tokenAddress)!, eth: web3.eth, privateKey: privateKey, proxyAddress: EthereumAddress(hexString: proxyAddress)!, networkType: networkType)
+  public func getExchangeInstance() -> IZrxExchange {
+    return getExchangeInstance(address: networkType.exchangeAddress)
+  }
+  
+  public func getExchangeInstance(address: String) -> IZrxExchange {
+    return ZrxExchangeWrapper(address: EthereumAddress(hexString: address)!, eth: web3.eth, privateKey: privateKey, gasProvider: gasInfoProvider, networkType: networkType)
+  }
+  
+  public func getErc20ProxyInstance(tokenAddress: String, proxyAddress: String) -> IErc20Proxy {
+    return Erc20ProxyWrapper(address: EthereumAddress(hexString: tokenAddress)!, eth: web3.eth, privateKey: privateKey, proxyAddress: EthereumAddress(hexString: proxyAddress)!, gasProvider: gasInfoProvider, networkType: networkType)
   }
   
   public func signOrder(_ order: Order) -> SignedOrder? {
@@ -124,6 +135,33 @@ public class ZrxKit {
     
     func getInfuraUrl(infuraKey: String) -> String {
       return "https://\(subdomain).infura.io/\(infuraKey)"
+    }
+  }
+  
+  public struct GasInfoProvider: ContractGasProvider {
+    public func getGasPrice(_ contractFunc: String) -> BigUInt {
+      return 5_000_000_000
+    }
+    
+    public func getGasPrice() -> BigUInt {
+      return getGasPrice("")
+    }
+    
+    public func getGasLimit(_ contractFunc: String) -> BigUInt {
+      switch contractFunc {
+      case WethWrapper.FUNC_DEPOSIT:
+        return 40_000
+      case WethWrapper.FUNC_WITHDRAW:
+        return 60_000
+      case Erc20ProxyWrapper.FUNC_APPROVE:
+        return 80_000
+      default:
+        return 400_000
+      }
+    }
+    
+    public func getGasLimit() -> BigUInt {
+      return getGasLimit("")
     }
   }
 }

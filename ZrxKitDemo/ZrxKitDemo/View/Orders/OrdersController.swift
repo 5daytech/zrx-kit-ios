@@ -35,6 +35,8 @@ class OrdersController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    tableView.delegate = self
+    tableView.dataSource = self
     tableView.register(UINib(nibName: String(describing: OrdersCell.self), bundle: Bundle(for: OrdersCell.self)), forCellReuseIdentifier: OrdersCell.reuseID)
     tableView.tableFooterView = UIView()
     tableView.separatorInset = .zero
@@ -42,7 +44,6 @@ class OrdersController: UIViewController {
     let ordersObservable = side == .ASK ? viewModel.asks : viewModel.bids
     
     ordersObservable.subscribe(onNext: { (orders) in
-      print("orrrders \(orders.count)")
       self.orders = orders
       self.tableView.reloadData()
     }, onError: { (error) in
@@ -59,7 +60,6 @@ class OrdersController: UIViewController {
   }
   
   @IBAction func onCreateOrderAction(_ sender: UIButton) {
-    print("onCreateOrderAction")
     delegate?.showCreateOrderStep(side)
   }
 }
@@ -77,6 +77,7 @@ extension OrdersController: UITableViewDelegate, UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: OrdersCell.reuseID) as? OrdersCell else {
       fatalError()
     }
+    
     cell.setup(side: side)
     return cell
   }

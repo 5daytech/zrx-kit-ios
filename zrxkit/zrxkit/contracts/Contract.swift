@@ -6,10 +6,12 @@ public class Contract: GenericERC20Contract {
   
   let privateKey: EthereumPrivateKey
   let networkType: ZrxKit.NetworkType
+  let gasProvider: ContractGasProvider
   
-  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, networkType: ZrxKit.NetworkType) {
+  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, gasProvider: ContractGasProvider, networkType: ZrxKit.NetworkType) {
     self.privateKey = privateKey
     self.networkType = networkType
+    self.gasProvider = gasProvider
     super.init(address: address, eth: eth)
   }
   
@@ -33,22 +35,26 @@ public class Contract: GenericERC20Contract {
     }
   }
   
-  func executeTransaction(method: SolidityInvocation?, value: EthereumQuantity?) -> Observable<EthereumData> {
+  func executeTransaction(invocation: SolidityInvocation?, value: EthereumQuantity?, data: EthereumData = EthereumData([])) -> Observable<EthereumData> {
+    return executeTransaction(invocation: invocation, value: value, address: address!, data: data)
+  }
+  
+  func executeTransaction(invocation: SolidityInvocation?, value: EthereumQuantity?, address: EthereumAddress, data: EthereumData = EthereumData([])) -> Observable<EthereumData> {
     return Observable.create { observer in
       self.eth.getTransactionCount(address: self.privateKey.address, block: .latest, response: { (nonce) in
         switch nonce.status {
         case .success(let result):
-          guard let transaction = self.createTransaction(method: method, value: value, nonce: result) else {
+          guard let transaction = self.createTransaction(invocation: invocation, value: value, nonce: result, address: address, data: data) else {
             observer.onError(ZrxError.cannotCreateTransaction)
             return
           }
-          
           do {
             let signedTransaction = try transaction.sign(with: self.privateKey, chainId: EthereumQuantity(quantity: BigUInt(self.networkType.id)))
             self.eth.sendRawTransaction(transaction: signedTransaction, response: { (hashResponse) in
               switch hashResponse.status {
               case .success(let result):
                 observer.onNext(result)
+                observer.onCompleted()
               case .failure(let error):
                 observer.onError(error)
               }
@@ -56,7 +62,6 @@ public class Contract: GenericERC20Contract {
           } catch {
             observer.onError(error)
           }
-          
         case .failure(let error):
           observer.onError(error)
         }
@@ -65,12 +70,22 @@ public class Contract: GenericERC20Contract {
     }
   }
   
-  private func createTransaction(method: SolidityInvocation?, value: EthereumQuantity?, nonce: EthereumQuantity) -> EthereumTransaction? {
-    if method != nil {
-      print("create transaction")
-      print(method)
-      return method!.createTransaction(nonce: nonce, from: self.privateKey.address, value: value, gas: 150000, gasPrice: EthereumQuantity(quantity: 21.gwei))
+  private func createTransaction(invocation: SolidityInvocation?, value: EthereumQuantity?, nonce: EthereumQuantity, address: EthereumAddress, data: EthereumData) -> EthereumTransaction? {
+    if invocation != nil {
+      return invocation!.createTransaction(
+        nonce: nonce,
+        from: self.privateKey.address,
+        value: value,
+        gas: EthereumQuantity(quantity: gasProvider.getGasLimit(invocation!.method.name)),
+        gasPrice: EthereumQuantity(quantity: gasProvider.getGasPrice(invocation!.method.name)))
     }
-    return EthereumTransaction(nonce: nonce, gasPrice: EthereumQuantity(quantity: 21.gwei), gas: 150_000, to: address, value: value)
+    
+    return EthereumTransaction(
+      nonce: nonce,
+      gasPrice: EthereumQuantity(quantity: gasProvider.getGasPrice()),
+      gas: EthereumQuantity(quantity: gasProvider.getGasLimit()),
+      to: address,
+      value: value ?? 0,
+      data: data)
   }
 }

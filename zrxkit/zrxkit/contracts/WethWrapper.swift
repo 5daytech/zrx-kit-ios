@@ -3,7 +3,26 @@ import RxSwift
 import BigInt
 import Web3
 
-public class WethWrapper: Contract {
+public class WethWrapper: Contract, IWethWrapper {
+  
+  static let FUNC_DEPOSIT = "deposit"
+  static let FUNC_WITHDRAW = "withdraw"
+  
+  public var depositEstimatedPrice: BigUInt {
+    return (depositGasLimit * gasProvider.getGasPrice(WethWrapper.FUNC_DEPOSIT)).eth
+  }
+
+  public var withdrawEstimatedPrice: BigUInt {
+    return (withdrawGasLimit * gasProvider.getGasPrice(WethWrapper.FUNC_WITHDRAW)).eth
+  }
+
+  public var depositGasLimit: BigUInt {
+    return gasProvider.getGasLimit(WethWrapper.FUNC_DEPOSIT)
+  }
+
+  public var withdrawGasLimit: BigUInt {
+    return gasProvider.getGasLimit(WethWrapper.FUNC_WITHDRAW)
+  }
   
   typealias TransactionReceipt = Bool
   
@@ -33,19 +52,19 @@ public class WethWrapper: Contract {
     })
   }
   
-  func deposit(amount: BigUInt) -> Observable<EthereumData> {
-    return executeTransaction(method: nil, value: EthereumQuantity(quantity: amount))
+  public func deposit(_ amount: BigUInt) -> Observable<EthereumData> {
+    return executeTransaction(invocation: nil, value: EthereumQuantity(quantity: amount))
   }
   
-  func withdraw(amount: BigUInt) -> Observable<EthereumData> {
+  public func withdraw(_ amount: BigUInt) -> Observable<EthereumData> {
     let inputs = [
       SolidityFunctionParameter(name: "wad", type: .uint256)
     ]
-    let method = SolidityNonPayableFunction(name: "withdraw", inputs: inputs, outputs: nil, handler: self)
-    return executeTransaction(method: method.invoke(amount), value: nil)
+    let method = SolidityNonPayableFunction(name: "withdraw", inputs: inputs, outputs: [], handler: self)
+    return executeTransaction(invocation: method.invoke(amount), value: nil)
   }
   
-  func transfer(toAddress: String, amount: BigUInt) -> Observable<EthereumData> {
+  public func transfer(toAddress: String, amount: BigUInt) -> Observable<EthereumData> {
     let inputs = [
       SolidityFunctionParameter(name: "dst", type: .address),
       SolidityFunctionParameter(name: "wad", type: .uint256)
@@ -54,7 +73,7 @@ public class WethWrapper: Contract {
       SolidityFunctionParameter(name: "", type: .bool)
     ]
     let method = SolidityNonPayableFunction(name: "transferFrom", inputs: inputs, outputs: outputs, handler: self)
-    return executeTransaction(method: method.invoke(toAddress, amount), value: nil)
+    return executeTransaction(invocation: method.invoke(toAddress, amount), value: nil)
   }
   
   func approve(spenderAddress: EthereumAddress, amount: BigUInt) -> Observable<EthereumData> {
@@ -66,7 +85,7 @@ public class WethWrapper: Contract {
       SolidityFunctionParameter(name: "", type: .bool)
     ]
     let method = SolidityNonPayableFunction(name: "approve", inputs: inputs, outputs: outputs, handler: self)
-    return executeTransaction(method: method.invoke(spenderAddress, amount), value: nil)
+    return executeTransaction(invocation: method.invoke(spenderAddress, amount), value: nil)
   }
   
   func transferFrom(fromAddress: EthereumAddress, toAddress: EthereumAddress, amount: BigUInt) -> Observable<EthereumData> {
@@ -79,6 +98,6 @@ public class WethWrapper: Contract {
       SolidityFunctionParameter(name: "", type: .bool)
     ]
     let method = SolidityNonPayableFunction(name: "transferFrom", inputs: inputs, outputs: outputs, handler: self)
-    return executeTransaction(method: method.invoke(fromAddress, toAddress, amount), value: nil)
+    return executeTransaction(invocation: method.invoke(fromAddress, toAddress, amount), value: nil)
   }
 }

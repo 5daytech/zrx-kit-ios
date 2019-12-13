@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		85F3088FE867C0F71EA1E95B /* Pods_ZrxKitDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA4CC97DF829DE22DEC3C8D /* Pods_ZrxKitDemo.framework */; };
-		B5545A792338A79600359873 /* BalanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5545A782338A79600359873 /* BalanceController.swift */; };
+		B53FF458239E316A009D131B /* BalanceController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B53FF457239E316A009D131B /* BalanceController.xib */; };
+		B53FF45A239E321F009D131B /* BalanceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FF459239E321F009D131B /* BalanceController.swift */; };
+		B5545A792338A79600359873 /* BalanceControllerTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5545A782338A79600359873 /* BalanceControllerTable.swift */; };
 		B5545A7C2338A80E00359873 /* IAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5545A7B2338A80E00359873 /* IAdapter.swift */; };
 		B5545A7E2338A82200359873 /* EthereumAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5545A7D2338A82200359873 /* EthereumAdapter.swift */; };
 		B5545A802338A83600359873 /* Erc20Adapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5545A7F2338A83600359873 /* Erc20Adapter.swift */; };
@@ -56,7 +58,9 @@
 /* Begin PBXFileReference section */
 		0AA240D35795EA21C8329581 /* Pods-ZrxKitDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZrxKitDemo.debug.xcconfig"; path = "Target Support Files/Pods-ZrxKitDemo/Pods-ZrxKitDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		75C6A83F78F4366969E05E93 /* Pods-ZrxKitDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ZrxKitDemo.release.xcconfig"; path = "Target Support Files/Pods-ZrxKitDemo/Pods-ZrxKitDemo.release.xcconfig"; sourceTree = "<group>"; };
-		B5545A782338A79600359873 /* BalanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceController.swift; sourceTree = "<group>"; };
+		B53FF457239E316A009D131B /* BalanceController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BalanceController.xib; sourceTree = "<group>"; };
+		B53FF459239E321F009D131B /* BalanceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceController.swift; sourceTree = "<group>"; };
+		B5545A782338A79600359873 /* BalanceControllerTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceControllerTable.swift; sourceTree = "<group>"; };
 		B5545A7B2338A80E00359873 /* IAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAdapter.swift; sourceTree = "<group>"; };
 		B5545A7D2338A82200359873 /* EthereumAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumAdapter.swift; sourceTree = "<group>"; };
 		B5545A7F2338A83600359873 /* Erc20Adapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Erc20Adapter.swift; sourceTree = "<group>"; };
@@ -143,8 +147,10 @@
 			isa = PBXGroup;
 			children = (
 				B5545A892338AD5000359873 /* BalanceCell.xib */,
-				B5545A782338A79600359873 /* BalanceController.swift */,
+				B5545A782338A79600359873 /* BalanceControllerTable.swift */,
 				B5545A872338AD2300359873 /* BalanceCell.swift */,
+				B53FF457239E316A009D131B /* BalanceController.xib */,
+				B53FF459239E321F009D131B /* BalanceController.swift */,
 			);
 			path = Balance;
 			sourceTree = "<group>";
@@ -303,6 +309,7 @@
 				B5F1C76B2345F35D0011442B /* ConfirmOrderController.xib in Resources */,
 				B57DB746233CA201008ED1EE /* OrdersCell.xib in Resources */,
 				B5A9BB9B23221B7000DF756B /* LaunchScreen.storyboard in Resources */,
+				B53FF458239E316A009D131B /* BalanceController.xib in Resources */,
 				B5C682C62355E9AF00636D6A /* OrdersController.xib in Resources */,
 				B5A9BB9823221B7000DF756B /* Assets.xcassets in Resources */,
 				B5545A8A2338AD5000359873 /* BalanceCell.xib in Resources */,
@@ -371,10 +378,11 @@
 				B57DB748233CB8A5008ED1EE /* Utils.swift in Sources */,
 				B5F1C7622344A1F40011442B /* TransactionsController.swift in Sources */,
 				B5545A802338A83600359873 /* Erc20Adapter.swift in Sources */,
-				B5545A792338A79600359873 /* BalanceController.swift in Sources */,
+				B5545A792338A79600359873 /* BalanceControllerTable.swift in Sources */,
 				B5545A7E2338A82200359873 /* EthereumAdapter.swift in Sources */,
 				B5545A832338AA6C00359873 /* TransactionRecord.swift in Sources */,
 				B5F2F1682333BA54001D4926 /* MainTabController.swift in Sources */,
+				B53FF45A239E321F009D131B /* BalanceController.swift in Sources */,
 				B5F2F16523336F59001D4926 /* MainViewModel.swift in Sources */,
 				B5C682C22355DA8400636D6A /* CreateOrderController.swift in Sources */,
 				B5545A7C2338A80E00359873 /* IAdapter.swift in Sources */,

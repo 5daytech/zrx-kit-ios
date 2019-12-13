@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BalanceController" customModule="ZrxKitDemo" customModuleProvider="target">
+            <connections>
+                <outlet property="ethAmountField" destination="kod-Re-Z9D" id="NZa-v3-7a4"/>
+                <outlet property="ethLabel" destination="qdM-9J-bi7" id="QdG-O9-Dcs"/>
+                <outlet property="lastBlockLabel" destination="ghy-Gl-7ly" id="d8q-aQ-qtH"/>
+                <outlet property="tokenLabel" destination="UBb-cJ-P57" id="foA-nr-Qvd"/>
+                <outlet property="view" destination="iN0-l3-epB" id="vNn-Wv-hxP"/>
+                <outlet property="wethAmountField" destination="rsV-hz-6fq" id="Jv2-qq-Hfa"/>
+                <outlet property="wethLabel" destination="dYa-BQ-7gX" id="lym-Jl-Zfu"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="TQg-AC-rpZ">
+                    <rect key="frame" x="20" y="44" width="374" height="112"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETH:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qdM-9J-bi7">
+                            <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WETH:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dYa-BQ-7gX">
+                            <rect key="frame" x="0.0" y="30.5" width="374" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TOKEN:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBb-cJ-P57">
+                            <rect key="frame" x="0.0" y="61" width="374" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last block:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ghy-Gl-7ly">
+                            <rect key="frame" x="0.0" y="91.5" width="374" height="20.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="H91-AU-CYY">
+                    <rect key="frame" x="20" y="196" width="374" height="40"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Eth amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kod-Re-Z9D">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="40"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8XW-dq-uow">
+                            <rect key="frame" x="330" y="0.0" width="44" height="40"/>
+                            <state key="normal" title="WRAP"/>
+                            <connections>
+                                <action selector="wrapAction:" destination="-1" eventType="touchUpInside" id="1hl-ar-vgJ"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="jjc-NI-FTc"/>
+                    </constraints>
+                </stackView>
+                <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="sFo-jw-1cW">
+                    <rect key="frame" x="20" y="244" width="374" height="40"/>
+                    <subviews>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Weth amount" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rsV-hz-6fq">
+                            <rect key="frame" x="0.0" y="0.0" width="299" height="40"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T44-QJ-CLg">
+                            <rect key="frame" x="309" y="0.0" width="65" height="40"/>
+                            <state key="normal" title="UNWRAP"/>
+                            <connections>
+                                <action selector="unwrapAction:" destination="-1" eventType="touchUpInside" id="iql-ao-puG"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="aJf-nv-vWq"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="sFo-jw-1cW" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="BBo-2O-WIH"/>
+                <constraint firstItem="TQg-AC-rpZ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="Ims-2R-VKC"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="sFo-jw-1cW" secondAttribute="trailing" constant="20" id="W2t-Fv-eAq"/>
+                <constraint firstItem="TQg-AC-rpZ" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="awB-Kg-J8n"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="H91-AU-CYY" secondAttribute="trailing" constant="20" id="hGq-uu-Adm"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="TQg-AC-rpZ" secondAttribute="trailing" constant="20" id="iQq-fR-pEZ"/>
+                <constraint firstItem="sFo-jw-1cW" firstAttribute="top" secondItem="H91-AU-CYY" secondAttribute="bottom" constant="8" id="kk4-PP-N4c"/>
+                <constraint firstItem="H91-AU-CYY" firstAttribute="top" secondItem="TQg-AC-rpZ" secondAttribute="bottom" constant="40" id="vcg-a1-Fea"/>
+                <constraint firstItem="H91-AU-CYY" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="xnq-dQ-E6O"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="139" y="137"/>
+        </view>
+    </objects>
+</document>

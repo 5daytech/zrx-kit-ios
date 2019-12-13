@@ -26,6 +26,7 @@ class MainViewModel {
   private let ethereumAdapter: EthereumAdapter
   private let wethAdapter: Erc20Adapter
   private let tokenAdapter: Erc20Adapter
+  private let zrxExchangeContract: IZrxExchange
   
   var asks = BehaviorSubject<[SignedOrder]>(value: [])
   var bids = BehaviorSubject<[SignedOrder]>(value: [])
@@ -45,21 +46,19 @@ class MainViewModel {
   }
   
   init() {
-    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
-//    let words = "burden crumble violin flip multiply above usual dinner eight unusual clay identify".split(separator: " ").map { String($0) }
+//    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
+    let words = "burden crumble violin flip multiply above usual dinner eight unusual clay identify".split(separator: " ").map { String($0) }
     let seed = Mnemonic.seed(mnemonic: words)
     let hdWallet = HDWallet(seed: seed, coinType: 1, xPrivKey: 0, xPubKey: 0)
     let privateKey = try! hdWallet.privateKey(account: 0, index: 0, chain: .external).raw
-    
-    print(privateKey.toEIP55Address())
-    
     let pairs = [Pair<AssetItem, AssetItem>(first: ZrxKit.assetItemForAddress(address: tokenAddress), second: ZrxKit.assetItemForAddress(address: wethAddress))]
-    let config = RelayerConfig(baseUrl: "https://relayer.ropsten.fridayte.ch", suffix: "", version: "v2")
+    let config = RelayerConfig(baseUrl: "https://ropsten.api.udex.app/sra", suffix: "", version: "v2")
     let relayers = [Relayer(id: 0, name: "BDRelayer", availablePairs: pairs, feeRecipients: [feeRecipient], exchangeAddress: zrxKitNetworkType.exchangeAddress, config: config)]
     
     zrxKit = ZrxKit.getInstance(relayers: relayers, privateKey: privateKey, infuraKey: infuraCredentials.secret!)
     ethereumKit = try! EthereumKit.instance(privateKey: privateKey, syncMode: .api, networkType: networkType, infuraCredentials: infuraCredentials, etherscanApiKey: etherscanKey, walletId: "default")
     
+    zrxExchangeContract = zrxKit.getExchangeInstance()
     wethContract = zrxKit.getWethWrapperInstance()
     ethereumAdapter = EthereumAdapter(ethereumKit: ethereumKit)
     wethAdapter = Erc20Adapter(ethereumKit: ethereumKit, name: "Wrapped Eth", coin: "WETH", contractAddress: wethAddress, decimal: decimals)
@@ -108,6 +107,8 @@ class MainViewModel {
         print("Orders refresh error: \(error)")
       }).disposed(by: disposeBag)
     }
+  
+  
   
   private func updateLastBlockHeight() {
     lastBlockHeight.onNext(ethereumAdapter.lastBlockHeight)
@@ -178,35 +179,79 @@ class MainViewModel {
   }
   
   func fillOrder(_ order: SignedOrder, _ side: EOrderSide, _ amount: Decimal) {
-    let amountBigUInt = BigUInt("\(amount)", radix: 10)!
-    checkAllowance()
+    var big = amount * pow(10, decimals)
+    var rounded = Decimal()
+    NSDecimalRound(&rounded, &big, 0, .plain)
+    let amountBigUInt = BigUInt("\(rounded)", radix: 10)!
+    checkAllowance().observeOn(MainScheduler.instance).subscribe(onNext: { (allowed) in
+      if allowed {
+        switch side{
+        case .ASK:
+          self.zrxExchangeContract.marketBuyOrders(orders: [order], fillAmount: amountBigUInt).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
+            print(data.hex())
+          }, onError: { (err) in
+            print(err)
+          }, onCompleted: {
+            print("ASK Completed")
+          }).disposed(by: self.disposeBag)
+        case .BID:
+          self.zrxExchangeContract.marketBuyOrders(orders: [order], fillAmount: amountBigUInt).subscribeOn(MainScheduler.instance).subscribe(onNext: { (data) in
+            print(data.hex())
+          }, onError: { (err) in
+            print(err)
+          }, onCompleted: {
+            print("BID Completed")
+          }).disposed(by: self.disposeBag)
+        }
+      } else {
+        print("Unlock tokens")
+      }
+    }, onError: { (err) in
+      print(err)
+    }, onCompleted: {
+      print("fill order completed")
+      }).disposed(by: disposeBag)
   }
   
   func createOrder(_ amount: Decimal, _ price: Decimal, _ side: EOrderSide) {
-    print(#function)
-    print(amount)
-    print(price * amount)
-    
     let makerAmount = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
     let takerAmount = BigUInt("\(amount * price * pow(10, decimals))", radix: 10)!
     postOrder(makerAmount, takerAmount, side)
+  }
+  
+  func wrapEther(_ amount: Decimal) {
+    let amountInt = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
+    wethContract.deposit(amountInt).observeOn(MainScheduler.instance).subscribe(onNext: { (txHash) in
+      print("wrap hex")
+      print(txHash.hex())
+    }, onError: { (err) in
+      print(err)
+    }, onCompleted: {
+      print("completed")
+      }).disposed(by: disposeBag)
+  }
+  
+  func unwrapEther(_ amount: Decimal) {
+    let amountInt = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
+    wethContract.withdraw(amountInt).observeOn(MainScheduler.instance).subscribe(onNext: { (txHash) in
+      print(txHash.hex())
+    }, onError: { (err) in
+      print(err)
+    }, onCompleted: {
+      print("completed")
+      }).disposed(by: disposeBag)
   }
   
   func postOrder(_ makeAmount: BigUInt, _ takeAmount: BigUInt, _ side: EOrderSide) {
     let expirationTime = "\(Int(Date().timeIntervalSince1970 + (60 * 60 * 24 * 3)))" // Order valid for 3 days
     let firstCoinAsset = assetPair.first.assetData
     let secondCoinAsset = assetPair.second.assetData
+    let salt = "\(Int(Date().timeIntervalSince1970 * 1000))"
     
     let makerAsset: String
     let takerAsset: String
     let makerAssetAmount: String
     let takerAssetAmount: String
-    
-    print(#function)
-    print(makeAmount)
-    print(takeAmount)
-    print(expirationTime)
-    print("\(Date().timeIntervalSince1970)")
     
     switch side {
     case .ASK:
@@ -226,38 +271,35 @@ class MainViewModel {
                       takerAssetData: takerAsset,
                       makerAssetAmount: makerAssetAmount,
                       takerAssetAmount: takerAssetAmount,
-                      makerAddress: ethereumKit.receiveAddress,
+                      makerAddress: ethereumKit.receiveAddress.lowercased(),
                       takerAddress: "0x0000000000000000000000000000000000000000",
                       expirationTimeSeconds: expirationTime,
                       senderAddress: "0x0000000000000000000000000000000000000000",
                       feeRecipientAddress: feeRecipient,
                       makerFee: "0",
                       takerFee: "0",
-                      salt: "\(Int(Date().timeIntervalSince1970 * 1000))")
+                      salt: salt)
    
     
     guard let signedOrder = zrxKit.signOrder(order) else {
       return
     }
-    print("THE END")
-    
-    print(#function)
     checkAllowance()
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { (allowed) in
         if allowed {
-          print("Allowed")
           self.zrxKit.relayerManager.postOrder(relayerId: 0, order: signedOrder).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
-            print("on Next \(data)")
           }, onError: { (err) in
+            print("error on posting order")
+            print(err)
             print(err.localizedDescription)
           }, onCompleted: {
-            print("completed")
           }).disposed(by: self.disposeBag)
         } else {
           fatalError("Unlock tokens")
         }
       }, onError: { (err) in
+        print("error in postOrder checkAllowance")
         print(err)
       }, onCompleted: {
         print("checkAllowanceComplete")
@@ -265,44 +307,28 @@ class MainViewModel {
   }
   
   private func checkAllowance() -> Observable<Bool> {
-    print(#function)
     let base = assetPair.first
     let quote = assetPair.second
-    return Observable.create { observer in
-      observer.onNext(true)
-      return Disposables.create()
-    }
-//    return checkCoinAllowance(base.address)
-//      .flatMap { _ in self.checkCoinAllowance(quote.address) }
+    return self.checkCoinAllowance(base.address).flatMap { _ in self.checkCoinAllowance(quote.address) }
   }
   
   private func checkCoinAllowance(_ address: String) -> Observable<Bool> {
-    print(#function)
     let coinWrapper = zrxKit.getErc20ProxyInstance(tokenAddress: address)
     return Observable.create { observer in
-      coinWrapper.proxyAllowance(ownerAddress: EthereumAddress(hexString: address)!).observeOn(MainScheduler.instance).subscribe(onNext: { (amount) in
-        print("\(address) allowance \(amount)")
+      coinWrapper.proxyAllowance(self.ethereumKit.receiveAddress).observeOn(MainScheduler.instance).subscribe(onNext: { (amount) in
         if amount > BigUInt.zero {
-          print("amount > 0")
           observer.onNext(true)
         } else {
-          print("start setUnlimitedProxyAllowance")
           coinWrapper.setUnlimitedProxyAllowance().observeOn(MainScheduler.instance)
             .subscribe(onNext: { (ethData) in
-              print(ethData.hex())
-              print("setUnlimitedProxyAllowance onNext")
               observer.onNext(true)
             }, onError: { (err) in
-              print("setUnlimitedProxyAllowance")
-              print(err)
               observer.onError(err)
             }, onCompleted: {
-              print("setUnlimitedProxyAllowance completed")
               observer.onCompleted()
             }).disposed(by: self.disposeBag)
         }
       }, onError: { (err) in
-        print("proxy allowance")
         observer.onError(err)
       }, onCompleted: {
         

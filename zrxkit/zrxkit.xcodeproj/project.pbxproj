@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,10 @@
 		B5007F442362B392005218BA /* Eip712Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5007F432362B392005218BA /* Eip712Data.swift */; };
 		B5007F462362B9D3005218BA /* Extension+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5007F452362B9D3005218BA /* Extension+String.swift */; };
 		B5007F482362BE93005218BA /* Eip712Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5007F472362BE93005218BA /* Eip712Encoder.swift */; };
+		B53FF4462398EA87009D131B /* zrxkitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53FF4452398EA87009D131B /* zrxkitTests.swift */; };
+		B53FF4482398EA87009D131B /* zrxkit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5D3A66E23153FFC004B07D9 /* zrxkit.framework */; };
+		B543F1A5239FC8E70096ABD5 /* Contracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = B543F1A4239FC8E70096ABD5 /* Contracts.swift */; };
+		B543F1A7239FCD0F0096ABD5 /* ContractGasProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */; };
 		B54C2750238B92DC0043EA9B /* TypeEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54C274F238B92DC0043EA9B /* TypeEncoder.swift */; };
 		B54C2752238FC9940043EA9B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54C2751238FC9940043EA9B /* Constants.swift */; };
 		B5A4DA362328AEF500E9766A /* IRelayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A4DA352328AEF500E9766A /* IRelayerManager.swift */; };
@@ -39,16 +43,33 @@
 		B5F2F16D2334A065001D4926 /* ZrxExchangeWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F16C2334A065001D4926 /* ZrxExchangeWrapper.swift */; };
 		B5F2F16F2334A15C001D4926 /* StructFunctionEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F2F16E2334A15C001D4926 /* StructFunctionEncoder.swift */; };
 		B5F92B672387DE27006BA97A /* Extension+Decimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F92B662387DE27006BA97A /* Extension+Decimal.swift */; };
+		BF24961192AAEA5BB85B7F27 /* Pods_zrxkitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E179BC9D527AB3D50019E62 /* Pods_zrxkitTests.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B53FF4492398EA87009D131B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B5D3A66523153FFC004B07D9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B5D3A66D23153FFC004B07D9;
+			remoteInfo = zrxkit;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		26181D5E6498E61DF928B2D1 /* Pods-zrxkit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zrxkit.debug.xcconfig"; path = "Target Support Files/Pods-zrxkit/Pods-zrxkit.debug.xcconfig"; sourceTree = "<group>"; };
 		5C79330F9D1661317C8E41F6 /* Pods_zrxkit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_zrxkit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E179BC9D527AB3D50019E62 /* Pods_zrxkitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_zrxkitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C320D12CBEA62A103620B79 /* Pods-zrxkit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zrxkit.release.xcconfig"; path = "Target Support Files/Pods-zrxkit/Pods-zrxkit.release.xcconfig"; sourceTree = "<group>"; };
 		B5007F402362B2B1005218BA /* SignUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUtils.swift; sourceTree = "<group>"; };
 		B5007F432362B392005218BA /* Eip712Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eip712Data.swift; sourceTree = "<group>"; };
 		B5007F452362B9D3005218BA /* Extension+String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+String.swift"; sourceTree = "<group>"; };
 		B5007F472362BE93005218BA /* Eip712Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Eip712Encoder.swift; sourceTree = "<group>"; };
+		B53FF4432398EA87009D131B /* zrxkitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = zrxkitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B53FF4452398EA87009D131B /* zrxkitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = zrxkitTests.swift; sourceTree = "<group>"; };
+		B53FF4472398EA87009D131B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B543F1A4239FC8E70096ABD5 /* Contracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contracts.swift; sourceTree = "<group>"; };
+		B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractGasProvider.swift; sourceTree = "<group>"; };
 		B54C274F238B92DC0043EA9B /* TypeEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeEncoder.swift; sourceTree = "<group>"; };
 		B54C2751238FC9940043EA9B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B5A4DA352328AEF500E9766A /* IRelayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRelayerManager.swift; sourceTree = "<group>"; };
@@ -78,9 +99,20 @@
 		B5F2F16C2334A065001D4926 /* ZrxExchangeWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZrxExchangeWrapper.swift; sourceTree = "<group>"; };
 		B5F2F16E2334A15C001D4926 /* StructFunctionEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructFunctionEncoder.swift; sourceTree = "<group>"; };
 		B5F92B662387DE27006BA97A /* Extension+Decimal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+Decimal.swift"; sourceTree = "<group>"; };
+		BD594989C3031C877AEEA599 /* Pods-zrxkitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zrxkitTests.debug.xcconfig"; path = "Target Support Files/Pods-zrxkitTests/Pods-zrxkitTests.debug.xcconfig"; sourceTree = "<group>"; };
+		C67945CEDC90FB641B3404CC /* Pods-zrxkitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-zrxkitTests.release.xcconfig"; path = "Target Support Files/Pods-zrxkitTests/Pods-zrxkitTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B53FF4402398EA87009D131B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B53FF4482398EA87009D131B /* zrxkit.framework in Frameworks */,
+				BF24961192AAEA5BB85B7F27 /* Pods_zrxkitTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B5D3A66B23153FFC004B07D9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -97,6 +129,8 @@
 			children = (
 				26181D5E6498E61DF928B2D1 /* Pods-zrxkit.debug.xcconfig */,
 				9C320D12CBEA62A103620B79 /* Pods-zrxkit.release.xcconfig */,
+				BD594989C3031C877AEEA599 /* Pods-zrxkitTests.debug.xcconfig */,
+				C67945CEDC90FB641B3404CC /* Pods-zrxkitTests.release.xcconfig */,
 			);
 			name = Pods;
 			path = ../Pods;
@@ -111,6 +145,7 @@
 				B5F92B662387DE27006BA97A /* Extension+Decimal.swift */,
 				B54C274F238B92DC0043EA9B /* TypeEncoder.swift */,
 				B54C2751238FC9940043EA9B /* Constants.swift */,
+				B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -122,6 +157,15 @@
 				B5007F472362BE93005218BA /* Eip712Encoder.swift */,
 			);
 			path = eip712;
+			sourceTree = "<group>";
+		};
+		B53FF4442398EA87009D131B /* zrxkitTests */ = {
+			isa = PBXGroup;
+			children = (
+				B53FF4452398EA87009D131B /* zrxkitTests.swift */,
+				B53FF4472398EA87009D131B /* Info.plist */,
+			);
+			path = zrxkitTests;
 			sourceTree = "<group>";
 		};
 		B5A4DA372328B0E300E9766A /* remote */ = {
@@ -141,6 +185,7 @@
 				B5F2F16C2334A065001D4926 /* ZrxExchangeWrapper.swift */,
 				B5F2F16E2334A15C001D4926 /* StructFunctionEncoder.swift */,
 				B5F1C76E234763B60011442B /* Erc20ProxyWrapper.swift */,
+				B543F1A4239FC8E70096ABD5 /* Contracts.swift */,
 			);
 			path = contracts;
 			sourceTree = "<group>";
@@ -149,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				B5D3A67023153FFC004B07D9 /* zrxkit */,
+				B53FF4442398EA87009D131B /* zrxkitTests */,
 				B5D3A66F23153FFC004B07D9 /* Products */,
 				4977E9F30D12FAA3FF36DAB6 /* Pods */,
 				FBFCEF2F06614E96F436A728 /* Frameworks */,
@@ -159,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				B5D3A66E23153FFC004B07D9 /* zrxkit.framework */,
+				B53FF4432398EA87009D131B /* zrxkitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -219,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				5C79330F9D1661317C8E41F6 /* Pods_zrxkit.framework */,
+				8E179BC9D527AB3D50019E62 /* Pods_zrxkitTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -237,6 +285,26 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		B53FF4422398EA87009D131B /* zrxkitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B53FF44D2398EA87009D131B /* Build configuration list for PBXNativeTarget "zrxkitTests" */;
+			buildPhases = (
+				522CE28CEAC03EA1F107D005 /* [CP] Check Pods Manifest.lock */,
+				B53FF43F2398EA87009D131B /* Sources */,
+				B53FF4402398EA87009D131B /* Frameworks */,
+				B53FF4412398EA87009D131B /* Resources */,
+				0944BC3769E5EC4E14A47697 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B53FF44A2398EA87009D131B /* PBXTargetDependency */,
+			);
+			name = zrxkitTests;
+			productName = zrxkitTests;
+			productReference = B53FF4432398EA87009D131B /* zrxkitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B5D3A66D23153FFC004B07D9 /* zrxkit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B5D3A67623153FFC004B07D9 /* Build configuration list for PBXNativeTarget "zrxkit" */;
@@ -262,9 +330,13 @@
 		B5D3A66523153FFC004B07D9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1120;
 				LastUpgradeCheck = 1030;
 				ORGANIZATIONNAME = BlocksDecoded;
 				TargetAttributes = {
+					B53FF4422398EA87009D131B = {
+						CreatedOnToolsVersion = 11.2.1;
+					};
 					B5D3A66D23153FFC004B07D9 = {
 						CreatedOnToolsVersion = 10.3;
 						LastSwiftMigration = 1030;
@@ -284,11 +356,19 @@
 			projectRoot = "";
 			targets = (
 				B5D3A66D23153FFC004B07D9 /* zrxkit */,
+				B53FF4422398EA87009D131B /* zrxkitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B53FF4412398EA87009D131B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B5D3A66C23153FFC004B07D9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -321,9 +401,56 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		0944BC3769E5EC4E14A47697 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-zrxkitTests/Pods-zrxkitTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-zrxkitTests/Pods-zrxkitTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-zrxkitTests/Pods-zrxkitTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		522CE28CEAC03EA1F107D005 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-zrxkitTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B53FF43F2398EA87009D131B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B53FF4462398EA87009D131B /* zrxkitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B5D3A66A23153FFC004B07D9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -352,10 +479,12 @@
 				B5007F442362B392005218BA /* Eip712Data.swift in Sources */,
 				B5A9BBAB23221F6B00DF756B /* IOrder.swift in Sources */,
 				B5A4DA362328AEF500E9766A /* IRelayerManager.swift in Sources */,
+				B543F1A7239FCD0F0096ABD5 /* ContractGasProvider.swift in Sources */,
 				B5A4DA3B2328DF4100E9766A /* RelayerManager.swift in Sources */,
 				B5007F412362B2B1005218BA /* SignUtils.swift in Sources */,
 				B5F2F16F2334A15C001D4926 /* StructFunctionEncoder.swift in Sources */,
 				B5F92B672387DE27006BA97A /* Extension+Decimal.swift in Sources */,
+				B543F1A5239FC8E70096ABD5 /* Contracts.swift in Sources */,
 				B5A9BBA723221CD800DF756B /* EAssetProxyId.swift in Sources */,
 				B5F2F16D2334A065001D4926 /* ZrxExchangeWrapper.swift in Sources */,
 			);
@@ -363,7 +492,55 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		B53FF44A2398EA87009D131B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B5D3A66D23153FFC004B07D9 /* zrxkit */;
+			targetProxy = B53FF4492398EA87009D131B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		B53FF44B2398EA87009D131B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BD594989C3031C877AEEA599 /* Pods-zrxkitTests.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 693KPRUMV4;
+				INFOPLIST_FILE = zrxkitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.abaikirov.zrxkitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B53FF44C2398EA87009D131B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C67945CEDC90FB641B3404CC /* Pods-zrxkitTests.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 693KPRUMV4;
+				INFOPLIST_FILE = zrxkitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.abaikirov.zrxkitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		B5D3A67423153FFC004B07D9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -546,6 +723,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B53FF44D2398EA87009D131B /* Build configuration list for PBXNativeTarget "zrxkitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B53FF44B2398EA87009D131B /* Debug */,
+				B53FF44C2398EA87009D131B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B5D3A66823153FFC004B07D9 /* Build configuration list for PBXProject "zrxkit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

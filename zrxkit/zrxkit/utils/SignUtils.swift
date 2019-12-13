@@ -9,10 +9,12 @@
 import Foundation
 import Web3
 
-class SignUtils {
+public class SignUtils {
   private let V_INDEX = 0
   private let R_RANGE = 1...32
   private let S_RANGE = 33...64
+  
+  public init() {}
   
   private let types: [String: [Eip712Data.Entry]] = [
     "EIP712Domain": [
@@ -38,7 +40,6 @@ class SignUtils {
   
   private func getOrderSignature(_ order: IOrder, _ privateKey: EthereumPrivateKey) -> String {
     let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(order), domain: getDomain(order))
-    
     let encoder = Eip712Encoder(structured)
     
     try! encoder.validateStructuredData(structured)
@@ -46,9 +47,9 @@ class SignUtils {
     let eipOrder = encoder.hashStructuredData()
     
     let result = try! privateKey.sign(message: eipOrder)
-    
+
     var resultArray = [UInt8]()
-    resultArray.append(UInt8(result.v))
+    resultArray.append(UInt8(result.v) + 27)
     resultArray.append(contentsOf: result.r)
     resultArray.append(contentsOf: result.s)
     resultArray.append(2)
@@ -88,15 +89,6 @@ class SignUtils {
   }
   
   private func orderToMap(_ order: IOrder) -> [String: Any] {
-    
-    print("Asset amounts")
-    print(order.makerAssetAmount)
-    print(order.takerAssetAmount)
-    print(order.expirationTimeSeconds)
-    print(order.salt)
-    print(order.expirationTimeSeconds.toBigUInt())
-    print(order.salt.toBigUInt())
-    
     return [
       "makerAddress": order.makerAddress,
       "takerAddress": order.takerAddress,
@@ -114,10 +106,10 @@ class SignUtils {
   }
   
   private func getDomain(_ order: IOrder) -> Eip712Data.EIP712Domain {
-    return Eip712Data.EIP712Domain(name: "0x Protocol", version: "2", chainId: 0, verifyingContract: order.exchangeAddress)
+    return Eip712Data.EIP712Domain(name: "0x Protocol", version: "2", chainId: 3, verifyingContract: order.exchangeAddress)
   }
   
-  func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey) -> SignedOrder? {
+  public func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey) -> SignedOrder? {
     let signature = getOrderSignature(order, privateKey)
     let signedOrder = SignedOrder.fromOrder(order: order, signature: signature)
     if isValidSignature(signedOrder) {

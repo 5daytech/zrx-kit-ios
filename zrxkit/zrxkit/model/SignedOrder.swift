@@ -1,4 +1,5 @@
 import Foundation
+import Web3
 
 public struct SignedOrder: IOrder, Codable {
   public var exchangeAddress: String
@@ -27,7 +28,7 @@ public struct SignedOrder: IOrder, Codable {
   
   public var salt: String
   
-  let signature: String
+  public let signature: String
   
   static func fromOrder(order: IOrder, signature: String) -> SignedOrder {
     return SignedOrder(exchangeAddress: order.exchangeAddress,
@@ -44,5 +45,24 @@ public struct SignedOrder: IOrder, Codable {
                        takerFee: order.takerFee,
                        salt: order.salt,
                        signature: signature)
+  }
+  
+  
+  
+  public func getSolWrappedValues() -> [SolidityWrappedValue] {
+    return [
+      SolidityWrappedValue.address(EthereumAddress(hexString: makerAddress)!),
+      SolidityWrappedValue.address(EthereumAddress(hexString: takerAddress)!),
+      SolidityWrappedValue.address(EthereumAddress(hexString: feeRecipientAddress)!),
+      SolidityWrappedValue.address(EthereumAddress(hexString: senderAddress)!),
+      SolidityWrappedValue.uint(BigUInt(makerAssetAmount, radix: 10)!),
+      SolidityWrappedValue.uint(BigUInt(takerAssetAmount, radix: 10)!),
+      SolidityWrappedValue.uint(BigUInt(makerFee, radix: 10)!),
+      SolidityWrappedValue.uint(BigUInt(takerFee, radix: 10)!),
+      SolidityWrappedValue.uint(BigUInt(expirationTimeSeconds, radix: 10)!),
+      SolidityWrappedValue.uint(BigUInt(salt, radix: 10)!),
+      SolidityWrappedValue.bytes(Data(hex: makerAssetData.clearPrefix())),
+      SolidityWrappedValue.bytes(Data(hex: takerAssetData.clearPrefix()))
+    ]
   }
 }

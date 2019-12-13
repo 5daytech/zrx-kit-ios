@@ -34,8 +34,7 @@ class MainTabController: UITabBarController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let balanceController = BalanceController()
-    balanceController.viewModel = viewModel
+    let balanceController = BalanceController.instance(viewModel: viewModel)
     let balanceNavigation = UINavigationController(rootViewController: balanceController)
     balanceNavigation.tabBarItem.title = "Balance"
     
@@ -63,11 +62,15 @@ class MainTabController: UITabBarController {
   @objc private func keyboardWillShow(_ notification: Notification) {
     let userInfo = notification.userInfo
     let frame  = userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-    animateTransitionIfNeeded(state: .keyboardExpanded(frame.height), duration: 0.5)
+    if createOrderController != nil {
+      animateTransitionIfNeeded(state: .keyboardExpanded(frame.height), duration: 0.5)
+    }
   }
   
   @objc private func keyboardWillHide(_ notification: Notification) {
-    animateTransitionIfNeeded(state: .keyboardCollapsed, duration: 0.5)
+    if createOrderController != nil {
+      animateTransitionIfNeeded(state: .keyboardCollapsed, duration: 0.5)
+    }
   }
   
   func setupCreateOrder(_ side: EOrderSide) {
@@ -141,10 +144,11 @@ class MainTabController: UITabBarController {
           break
         }
         self.runningAnimations.removeAll()
-        if !self.cardVisible {
+        if !self.cardVisible && self.createOrderController != nil {
           self.createOrderController.removeFromParent()
           self.createOrderController.view.removeFromSuperview()
           self.visualEffectView.removeFromSuperview()
+          self.createOrderController = nil
         }
       }
       

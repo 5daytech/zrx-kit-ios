@@ -11,21 +11,27 @@ import RxSwift
 import BigInt
 import Web3
 
-public class Erc20ProxyWrapper: Contract {
+public class Erc20ProxyWrapper: Contract, IErc20Proxy {
+  static let FUNC_APPROVE = "approve"
   
   private let proxyAddress: EthereumAddress
   
-  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, proxyAddress: EthereumAddress, networkType: ZrxKit.NetworkType) {
+  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, proxyAddress: EthereumAddress, gasProvider: ContractGasProvider, networkType: ZrxKit.NetworkType) {
     self.proxyAddress = proxyAddress
-    super.init(address: address, eth: eth, privateKey: privateKey, networkType: networkType)
+    super.init(address: address, eth: eth, privateKey: privateKey, gasProvider: gasProvider, networkType: networkType)
   }
   
   required init(address: EthereumAddress?, eth: Web3.Eth) {
     fatalError("init(address:eth:) has not been implemented")
   }
   
-  public func proxyAllowance(ownerAddress: EthereumAddress) -> Observable<BigUInt> {
-    return read(method: allowance(owner: ownerAddress, spender: proxyAddress)) { (result) -> BigUInt in
+  public func lockProxy() -> Observable<EthereumData> {
+    return executeTransaction(invocation: approve(spender: proxyAddress, value: 0), value: nil)
+  }
+  
+  public func proxyAllowance(_ ownerAddress: String) -> Observable<BigUInt> {
+    let ethereumAddress = EthereumAddress(hexString: ownerAddress)!
+    return read(method: allowance(owner: ethereumAddress, spender: proxyAddress)) { (result) -> BigUInt in
       guard let value = result["_remaining"] as? BigUInt else {
         fatalError()
       }
@@ -34,6 +40,6 @@ public class Erc20ProxyWrapper: Contract {
   }
   
   public func setUnlimitedProxyAllowance() -> Observable<EthereumData> {
-    return executeTransaction(method: approve(spender: proxyAddress, value: Constants.MAX_ALLOWANCE), value: nil)
+    return executeTransaction(invocation: approve(spender: proxyAddress, value: Constants.MAX_ALLOWANCE), value: nil)
   }
 }

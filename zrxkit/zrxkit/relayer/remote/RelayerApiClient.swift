@@ -26,31 +26,23 @@ class RelayerApiClient {
   }
   
   func postOrder(order: SignedOrder, networkId: Int) -> Observable<UInt> {
-    print("post order in \(#file)")
     let urlConvertible = RelayerNetworkClient.postOrder(url: "\(relayerConfig.url)/order", order: order, networkId: networkId)
-    print(urlConvertible)
-    print(String(data: try! urlConvertible.asURLRequest().httpBody!, encoding: .utf8))
     return request(try! urlConvertible.asURLRequest())
   }
   
   private func request<T: Codable>(_ urlConvertible: URLRequestConvertible) -> Observable<T> {
-    print("request \(urlConvertible)")
     return Observable<T>.create { observer in
       let request = Alamofire.request(urlConvertible).responseData(completionHandler: { (response) in
         switch response.result {
         case .success(let value):
-          do {
-            print(String(data: value, encoding: .utf8))
+          do {            
             let decoded = try JSONDecoder().decode(T.self, from: value)
-            print(decoded)
             observer.onNext(decoded)
             observer.onCompleted()
           } catch {
-            print("cannot decode")
             observer.onError(error)
           }
         case .failure(let error):
-          print(error.localizedDescription)
           observer.onError(error)
         }
       })

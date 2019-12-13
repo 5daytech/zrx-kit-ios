@@ -75,7 +75,6 @@ internal class Eip712Encoder {
   }
   
   private func encodeStruct(_ structName: String) -> String {
-    print("encodeStruct")
     let types = jsonMessageObject.types
     
     var structRepresentation = "\(structName)("
@@ -84,7 +83,6 @@ internal class Eip712Encoder {
     }
     structRepresentation = structRepresentation.substr(0, structRepresentation.count - 1)!
     structRepresentation += ")"
-    print(structRepresentation)
     return structRepresentation
   }
   
@@ -167,7 +165,6 @@ internal class Eip712Encoder {
   }
   
   func encodeType(_ primaryType: String) -> String {
-    print("encodeType")
     var deps = getDependencies(primaryType)
     deps.remove(primaryType)
     
@@ -179,23 +176,15 @@ internal class Eip712Encoder {
     for structName in depsAsList {
       result += encodeStruct(structName)
     }
-    print(result)
     return result
   }
   
   func hashType(_ primaryType: String) -> Array<UInt8> {
-    print("hashType")
-    print(primaryType)
     let encoded = encodeType(primaryType)
-    print("hashType: \(encoded)")
-    print("sha3 string")
-    print(encoded.sha3(.keccak256))
-    print(encoded.sha3(.keccak256).hexToBytes().map{ String(format: "%02x", $0) }.joined())
     return encoded.sha3(.keccak256).hexToBytes()
   }
   
   func encodeData(_ primaryType: String, _ data: [String: Any]) -> [UInt8] {
-    print("encodeData")
     let types = jsonMessageObject.types
     
     var encTypes = [String]()
@@ -204,43 +193,24 @@ internal class Eip712Encoder {
     encTypes.append("bytes32")
     encValues.append(hashType(primaryType))
     
-    print(encTypes)
-    print(encValues)
-    
     for field in types[primaryType]! {
       let value = data[field.name]
-      print("field name: \(field.name)")
-      print("field type: \(field.type)")
       if field.type == "string" {
-        print("string")
         encTypes.append("bytes32")
         let hashedValue = (value as! String).sha3(.keccak256).hexToBytes()
-        print(hashedValue.toHexString())
         encValues.append(hashedValue)
       } else if field.type == "bytes" {
-        print("bytes")
         encTypes.append("bytes32")
-        print((value as! [UInt8]).toHexString())
         let hashedValue = (value as! [UInt8]).sha3(.keccak256)
-        print(hashedValue.toHexString())
         encValues.append(hashedValue)
       } else if types.keys.contains(field.type) {
-        print("types contains \(field.type)")
         let hashedValue = encodeData(field.type, (value as! [String: Any]))
-        print(hashedValue.map{ String(format: "%02x", $0) }.joined())
         encTypes.append("bytes32")
         encValues.append(hashedValue)
       } else if field.type.range(of: arrayTypeRegex, options: .regularExpression) != nil {
-        print("array regex")
         let baseTypeName = field.type.substr(0, field.type.distance(from: field.type.startIndex, to: field.type.firstIndex(of: "[")!))!
-        print("Base type name")
-        print(baseTypeName)
         let expectedDimensions = getArrayDimensionsFromDeclaration(field.type)
-        print("expected dimensions")
-        print(expectedDimensions)
         let dataDimensions = getArrayDimensionsFromData(value)
-        print("Data dimensions")
-        print(dataDimensions)
         if expectedDimensions.count != dataDimensions.count {
           // Ex: Expected a 3d array, but got only a 2d array
           fatalError("Array Data \(value ?? "") has dimensions \(dataDimensions), " + "but expected dimensions are \(expectedDimensions)")
@@ -273,9 +243,6 @@ internal class Eip712Encoder {
       }
     }
     
-    print(encTypes)
-    print(encValues)
-    
     return encodePacked(encTypes, encValues)
   }
   
@@ -283,39 +250,24 @@ internal class Eip712Encoder {
     var result = [UInt8]()
     
     for i in types.indices {
-      print(types[i])
       switch types[i] {
-      case "string":
-        print(values[i])
-        break
       case "address":
         if let string = values[i] as? String {
           let encoded = TypeEncoder.encodeAddress(string: string.clearPrefix())
-          print(encoded)
           let encodedBytes = TypeEncoder.hexStringToBytes(input: encoded)
-          print(encodedBytes.toHexString())
           result.append(contentsOf: encodedBytes)
         }
-      case "bytes":
-        print(values[i])
-        break
       case "uint256":
-        print(values[i])
         if let uint = values[i] as? BigUInt {
           let encoded = TypeEncoder.encodeBigUInt(bigUInt: uint)
-          print(encoded)
           let encodedBytes = TypeEncoder.hexStringToBytes(input: encoded)
-          print(encodedBytes.toHexString())
           result.append(contentsOf: encodedBytes)
         }
         break
       case "bytes32":
         if let bytes = values[i] as? Bytes {
           let encoded = TypeEncoder.encodeBytes(bytes: bytes)
-          print(encoded)
-          
           let encodedBytes = TypeEncoder.hexStringToBytes(input: encoded)
-          print(encodedBytes.toHexString())
           result.append(contentsOf: encodedBytes)
         }
       default:
@@ -336,8 +288,6 @@ internal class Eip712Encoder {
     }
     
     data["version"] = jsonMessageObject.domain.version
-    print("hashDomain function")
-    print(data)
     return encodeData("EIP712Domain", data).sha3(.keccak256)
   }
   
@@ -348,17 +298,13 @@ internal class Eip712Encoder {
   func hashStructuredData() -> Array<UInt8> {
     var byteArray = Array<UInt8>()
     byteArray.append(contentsOf: "1901".hexToBytes())
-    print("hashStructuredData")
-    print(byteArray.map { String(format: "%02x", $0) }.joined())
     
     let domainHash = hashDomain()
     byteArray.append(contentsOf: domainHash)
-    print("hashDomain")
-    print(byteArray.toHexString())
     
     let dataHash = hashMessage(jsonMessageObject.primaryType, jsonMessageObject.message as! [String: Any])
     byteArray.append(contentsOf: dataHash)
-    return byteArray.sha3(.keccak256)
+    return byteArray
   }
   
   func validateStructuredData(_ jsonMessageObject: Eip712Data.EIP712Message) throws {
