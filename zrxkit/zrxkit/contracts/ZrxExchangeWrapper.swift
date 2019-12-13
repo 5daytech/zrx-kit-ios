@@ -119,18 +119,7 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
     let ordersSignatures = orders.map { Data(hex: $0.signature.clearPrefix()) }
     let invocation = method.invoke(ordersInTuple, fillAmount, ordersSignatures)
-    
-    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { eventEmmited in
-      switch eventEmmited.name {
-      case ZrxExchangeWrapper.Fill.name:
-        guard let filled = FillEventResponse(from: eventEmmited.values) else {
-          return
-        }
-        onFill(filled)
-      default:
-        break
-      }
-    })
+    return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
   public func marketSellOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
@@ -148,24 +137,23 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
     let ordersSignatures = orders.map { Data(hex: $0.signature.clearPrefix()) }
     let invocation = method.invoke(ordersInTuple, fillAmount, ordersSignatures)
-    
-    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { eventEmmited in
-      switch eventEmmited.name {
-      case ZrxExchangeWrapper.Fill.name:
-        guard let filled = FillEventResponse(from: eventEmmited.values) else {
-          return
-        }
-        onFill(filled)
-      default:
-        break
-      }
-    })
+    return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
-  public func fillOrder(order: SignedOrder, fillAmount: BigUInt) -> Observable<String> {
-    return Observable.create { (observer) -> Disposable in
-      return Disposables.create()
-    }
+  public func fillOrder(order: SignedOrder, fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
+    let inputs: [SolidityFunctionParameter] = [
+      SolidityFunctionParameter(name: "order", type: .tuple(orderTypes)),
+      SolidityFunctionParameter(name: "takerAssetFillAmount", type: .uint256),
+      SolidityFunctionParameter(name: "signature", type: .bytes(length: nil))
+    ]
+    let outputs: [SolidityFunctionParameter] = [
+      SolidityFunctionParameter(name: "fillResults", type: .tuple([.uint256, .uint256, .uint256, .uint256]))
+    ]
+    let method = SolidityNonPayableFunction(name: "fillOrder", inputs: inputs, outputs: outputs, handler: self)
+    let orderInTuple = SolidityTuple(order.getSolWrappedValues())
+    let orderSignature = Data(hex: order.signature.clearPrefix())
+    let invocation = method.invoke(orderInTuple, fillAmount, orderSignature)
+    return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
   public func cancelOrder(order: SignedOrder) -> Observable<String> {
@@ -184,5 +172,19 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return Observable.create { (observer) -> Disposable in
       return Disposables.create()
     }
+  }
+  
+  private func executeTransactionForFillEvent(invocation: SolidityInvocation, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
+    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { eventEmmited in
+      switch eventEmmited.name {
+      case ZrxExchangeWrapper.Fill.name:
+        guard let filled = FillEventResponse(from: eventEmmited.values) else {
+          return
+        }
+        onFill(filled)
+      default:
+        break
+      }
+    })
   }
 }

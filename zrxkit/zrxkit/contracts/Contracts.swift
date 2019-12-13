@@ -31,7 +31,7 @@ public protocol IZrxExchange {
   
   func marketBuyOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData>
   func marketSellOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData>
-  func fillOrder(order: SignedOrder, fillAmount: BigUInt) -> Observable<String>
+  func fillOrder(order: SignedOrder, fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData>
   func cancelOrder(order: SignedOrder) -> Observable<String>
   func batchCancelOrders(order: [SignedOrder]) -> Observable<String>
   func ordersInfo(orders: [SignedOrder]) -> Observable<[OrderInfo]>
