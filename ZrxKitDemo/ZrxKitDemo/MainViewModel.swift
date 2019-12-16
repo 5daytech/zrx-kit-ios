@@ -233,8 +233,17 @@ class MainViewModel {
   }
   
   func wrapEther(_ amount: Decimal) {
+    mainTabBarController?.showLoading()
     let amountInt = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
-    wethContract.deposit(amountInt).observeOn(MainScheduler.instance).subscribe(onNext: { (txHash) in
+    wethContract.deposit(
+      amountInt,
+      onReceipt: { receipt in
+        self.mainTabBarController?.hideLoading()
+        self.mainTabBarController?.showReceipt(receipt: receipt)
+    },
+      onDeposit: { response in
+    }).observeOn(MainScheduler.instance)
+      .subscribe(onNext: { (txHash) in
       print("wrap hex")
       print(txHash.hex())
     }, onError: { (err) in
@@ -245,8 +254,17 @@ class MainViewModel {
   }
   
   func unwrapEther(_ amount: Decimal) {
+    mainTabBarController?.showLoading()
     let amountInt = BigUInt("\(amount * pow(10, decimals))", radix: 10)!
-    wethContract.withdraw(amountInt).observeOn(MainScheduler.instance).subscribe(onNext: { (txHash) in
+    wethContract.withdraw(
+      amountInt,
+      onReceipt: { receipt in
+        self.mainTabBarController?.hideLoading()
+        self.mainTabBarController?.showReceipt(receipt: receipt)
+    },
+      onWithdrawal: { response in
+    }).observeOn(MainScheduler.instance)
+     .subscribe(onNext: { (txHash) in
       print(txHash.hex())
     }, onError: { (err) in
       print(err)
@@ -279,20 +297,21 @@ class MainViewModel {
       takerAssetAmount = "\(makeAmount)"
     }
     
-    let order = Order(exchangeAddress: zrxKitNetworkType.exchangeAddress,
-                      makerAssetData: makerAsset,
-                      takerAssetData: takerAsset,
-                      makerAssetAmount: makerAssetAmount,
-                      takerAssetAmount: takerAssetAmount,
-                      makerAddress: ethereumKit.receiveAddress.lowercased(),
-                      takerAddress: "0x0000000000000000000000000000000000000000",
-                      expirationTimeSeconds: expirationTime,
-                      senderAddress: "0x0000000000000000000000000000000000000000",
-                      feeRecipientAddress: feeRecipient,
-                      makerFee: "0",
-                      takerFee: "0",
-                      salt: salt)
-   
+    let order = Order(
+      exchangeAddress: zrxKitNetworkType.exchangeAddress,
+      makerAssetData: makerAsset,
+      takerAssetData: takerAsset,
+      makerAssetAmount: makerAssetAmount,
+      takerAssetAmount: takerAssetAmount,
+      makerAddress: ethereumKit.receiveAddress.lowercased(),
+      takerAddress: "0x0000000000000000000000000000000000000000",
+      expirationTimeSeconds: expirationTime,
+      senderAddress: "0x0000000000000000000000000000000000000000",
+      feeRecipientAddress: feeRecipient,
+      makerFee: "0",
+      takerFee: "0",
+      salt: salt
+    )
     
     guard let signedOrder = zrxKit.signOrder(order) else {
       return

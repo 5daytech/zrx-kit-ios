@@ -22,8 +22,17 @@ public protocol IWethWrapper {
   var depositGasLimit: BigUInt { get }
   var withdrawGasLimit: BigUInt { get }
   
-  func deposit(_ amount: BigUInt) -> Observable<EthereumData>
-  func withdraw(_ amount: BigUInt) -> Observable<EthereumData>
+  func deposit(
+    _ amount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onDeposit: @escaping (WethWrapper.DepositEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  
+  func withdraw(
+    _ amount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onWithdrawal: @escaping (WethWrapper.WithdrawalEventResponse) -> Void
+  ) -> Observable<EthereumData>
 }
 
 public protocol IZrxExchange {

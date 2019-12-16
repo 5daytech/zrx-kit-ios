@@ -63,6 +63,8 @@ class BalanceController: UIViewController {
     guard let amountStr = ethAmountField.text else {
       return
     }
+    ethAmountField.text = nil
+    ethAmountField.resignFirstResponder()
     if let wrapAmount = Decimal(string: amountStr) {
       viewModel.wrapEther(wrapAmount)
     } else {
@@ -74,6 +76,8 @@ class BalanceController: UIViewController {
     guard let amountStr = wethAmountField.text else {
       return
     }
+    wethAmountField.text = nil
+    wethAmountField.resignFirstResponder()
     if let unwrapAmount = Decimal(string: amountStr) {
       viewModel.unwrapEther(unwrapAmount)
     } else {

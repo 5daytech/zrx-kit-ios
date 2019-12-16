@@ -235,6 +235,9 @@ class MainTabController: UITabBarController {
   func showLoading() {
     if self.isLoading { return }
     self.isLoading = true
+    if cardViewController == nil {
+      checkNext()
+    }
   }
   
   func hideLoading() {
@@ -245,6 +248,9 @@ class MainTabController: UITabBarController {
   
   func showReceipt(receipt: EthereumTransactionReceiptObject) {
     nextCardViews.append(ReceiptView.instance(receipt: receipt))
+    if cardViewController == nil {
+      checkNext()
+    }
   }
 }
 
