@@ -29,11 +29,39 @@ public protocol IWethWrapper {
 public protocol IZrxExchange {
   var contractAddress: String { get }
   
-  func marketBuyOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData>
-  func marketSellOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData>
-  func fillOrder(order: SignedOrder, fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData>
-  func cancelOrder(order: SignedOrder, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void) -> Observable<EthereumData>
-  func batchCancelOrders(order: [SignedOrder]) -> Observable<String>
+  func marketBuyOrders(
+    orders: [SignedOrder],
+    fillAmount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  
+  func marketSellOrders(
+    orders: [SignedOrder],
+    fillAmount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  
+  func fillOrder(
+    order: SignedOrder,
+    fillAmount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  
+  func cancelOrder(
+    order: SignedOrder,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  
+  func batchCancelOrders(
+    orders: [SignedOrder],
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  
   func ordersInfo(orders: [SignedOrder]) -> Observable<[OrderInfo]>
 }
 

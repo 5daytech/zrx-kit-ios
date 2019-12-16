@@ -159,7 +159,13 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
   
   let orderTypes: [SolidityType] = [.address, .address, .address, .address, .uint256, .uint256, .uint256, .uint256, .uint256, .uint256, .bytes(length: nil), .bytes(length: nil)]
   
-  public func marketBuyOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (FillEventResponse) -> Void) -> Observable<EthereumData> {
+  public func marketBuyOrders(
+    orders: [SignedOrder],
+    fillAmount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (FillEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  {
     let inputs: [SolidityFunctionParameter] = [
       SolidityFunctionParameter(name: "orders", type: .array(type: .tuple(orderTypes), length: nil)),
       SolidityFunctionParameter(name: "makerAssetFillAmount", type: .uint256),
@@ -176,7 +182,13 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
-  public func marketSellOrders(orders: [SignedOrder], fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
+  public func marketSellOrders(
+    orders: [SignedOrder],
+    fillAmount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  {
     let inputs: [SolidityFunctionParameter] = [
       SolidityFunctionParameter(name: "orders", type: .array(type: .tuple(orderTypes), length: nil)),
       SolidityFunctionParameter(name: "takerAssetFillAmount", type: .uint256),
@@ -194,7 +206,13 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
-  public func fillOrder(order: SignedOrder, fillAmount: BigUInt, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
+  public func fillOrder(
+    order: SignedOrder,
+    fillAmount: BigUInt,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  {
     let inputs: [SolidityFunctionParameter] = [
       SolidityFunctionParameter(name: "order", type: .tuple(orderTypes)),
       SolidityFunctionParameter(name: "takerAssetFillAmount", type: .uint256),
@@ -210,7 +228,12 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
   }
   
-  public func cancelOrder(order: SignedOrder, onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void, onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void) -> Observable<EthereumData> {
+  public func cancelOrder(
+    order: SignedOrder,
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  {
     let inputs: [SolidityFunctionParameter] = [
       SolidityFunctionParameter(name: "order", type: .tuple(orderTypes))
     ]
@@ -220,10 +243,19 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return executeTransactionForCancelEvent(invocation: invocation, onReceipt: onReceipt, onCancel: onCancel)
   }
   
-  public func batchCancelOrders(order: [SignedOrder]) -> Observable<String> {
-    return Observable.create { (observer) -> Disposable in
-      return Disposables.create()
-    }
+  public func batchCancelOrders(
+    orders: [SignedOrder],
+    onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
+    onCancel: @escaping (ZrxExchangeWrapper.CancelEventResponse) -> Void
+  ) -> Observable<EthereumData>
+  {
+    let inputs: [SolidityFunctionParameter] = [
+      SolidityFunctionParameter(name: "orders", type: .array(type: .tuple(orderTypes), length: nil))
+    ]
+    let method = SolidityNonPayableFunction(name: "batchCancelOrders", inputs: inputs, handler: self)
+    let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
+    let invocation = method.invoke(ordersInTuple)
+    return executeTransactionForCancelEvent(invocation: invocation, onReceipt: onReceipt, onCancel: onCancel)
   }
   
   public func ordersInfo(orders: [SignedOrder]) -> Observable<[OrderInfo]> {
