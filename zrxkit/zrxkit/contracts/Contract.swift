@@ -144,12 +144,16 @@ extension Contract: TransactionWatcherDelegate {
   }
   
   public func transactionWatcher(_ transactionWatcher: TransactionWatcher, didReceiveReceipt receipt: EthereumTransactionReceiptObject) {
-    onReceiptCallback?(receipt)
+    DispatchQueue.main.async {
+      self.onReceiptCallback?(receipt)
+    }
   }
   
   public func transactionWatcher(_ transactionWatcher: TransactionWatcher, didReceiveEvent event: SolidityEmittedEvent) {
     print("\(#file) didReceiveEvent \(event)")
-    onEventCallback?(event)
+    DispatchQueue.main.async {
+      self.onEventCallback?(event)
+    }
     if watchingEvents != nil {
       transactionWatcher.stopWatching(events: watchingEvents!)
     }

@@ -75,14 +75,14 @@ class ConfirmOrderController: CardViewController {
   }  
   
   @IBAction func onTradeAction(_ sender: UIButton) {
+//    fillAmountField.resignFirstResponder()
+    cardViewDelegate?.dismissController(duration: animationDuration)
     if isMyOrder {
       viewModel.cancelOrder(order)
-      dismiss(animated: true, completion: nil)
     } else {
       if getAmount() > 0 {
         let amount = side == .ASK ? getAmount() : getAmount() * price
         viewModel.fillOrder(order, side, amount)
-        dismiss(animated: true, completion: nil)
       }
     }
   }

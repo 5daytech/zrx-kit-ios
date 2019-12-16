@@ -31,6 +31,10 @@
 		B5C682C22355DA8400636D6A /* CreateOrderController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C682C12355DA8400636D6A /* CreateOrderController.swift */; };
 		B5C682C42355DA9B00636D6A /* CreateOrderController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5C682C32355DA9B00636D6A /* CreateOrderController.xib */; };
 		B5C682C62355E9AF00636D6A /* OrdersController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5C682C52355E9AF00636D6A /* OrdersController.xib */; };
+		B5DAE24C23A74B5C00D6FBFA /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5DAE24B23A74B5C00D6FBFA /* LoadingView.xib */; };
+		B5DAE24E23A74B7200D6FBFA /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAE24D23A74B7200D6FBFA /* LoadingView.swift */; };
+		B5DAE25123A77BED00D6FBFA /* ReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5DAE25023A77BED00D6FBFA /* ReceiptView.swift */; };
+		B5DAE25323A77C3B00D6FBFA /* ReceiptView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5DAE25223A77C3B00D6FBFA /* ReceiptView.xib */; };
 		B5F1C7622344A1F40011442B /* TransactionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1C7612344A1F40011442B /* TransactionsController.swift */; };
 		B5F1C7642345BB290011442B /* TransactionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F1C7632345BB290011442B /* TransactionsCell.swift */; };
 		B5F1C7662345BBCB0011442B /* TransactionsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5F1C7652345BBCB0011442B /* TransactionsCell.xib */; };
@@ -83,6 +87,10 @@
 		B5C682C12355DA8400636D6A /* CreateOrderController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateOrderController.swift; sourceTree = "<group>"; };
 		B5C682C32355DA9B00636D6A /* CreateOrderController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CreateOrderController.xib; sourceTree = "<group>"; };
 		B5C682C52355E9AF00636D6A /* OrdersController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrdersController.xib; sourceTree = "<group>"; };
+		B5DAE24B23A74B5C00D6FBFA /* LoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingView.xib; sourceTree = "<group>"; };
+		B5DAE24D23A74B7200D6FBFA /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		B5DAE25023A77BED00D6FBFA /* ReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptView.swift; sourceTree = "<group>"; };
+		B5DAE25223A77C3B00D6FBFA /* ReceiptView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReceiptView.xib; sourceTree = "<group>"; };
 		B5F1C7612344A1F40011442B /* TransactionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsController.swift; sourceTree = "<group>"; };
 		B5F1C7632345BB290011442B /* TransactionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsCell.swift; sourceTree = "<group>"; };
 		B5F1C7652345BBCB0011442B /* TransactionsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransactionsCell.xib; sourceTree = "<group>"; };
@@ -214,6 +222,24 @@
 			path = CreateOrderStep;
 			sourceTree = "<group>";
 		};
+		B5DAE24A23A74B3A00D6FBFA /* LoadingView */ = {
+			isa = PBXGroup;
+			children = (
+				B5DAE24B23A74B5C00D6FBFA /* LoadingView.xib */,
+				B5DAE24D23A74B7200D6FBFA /* LoadingView.swift */,
+			);
+			path = LoadingView;
+			sourceTree = "<group>";
+		};
+		B5DAE24F23A77BD100D6FBFA /* ReceiptView */ = {
+			isa = PBXGroup;
+			children = (
+				B5DAE25023A77BED00D6FBFA /* ReceiptView.swift */,
+				B5DAE25223A77C3B00D6FBFA /* ReceiptView.xib */,
+			);
+			path = ReceiptView;
+			sourceTree = "<group>";
+		};
 		B5F1C7602344A1DF0011442B /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,6 +263,8 @@
 		B5F2F1692333BAE1001D4926 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B5DAE24F23A77BD100D6FBFA /* ReceiptView */,
+				B5DAE24A23A74B3A00D6FBFA /* LoadingView */,
 				B5C682C02355DA4000636D6A /* CreateOrderStep */,
 				B5F1C7692345F3480011442B /* ConfirmOrderStep */,
 				B5F1C7602344A1DF0011442B /* Transactions */,
@@ -308,6 +336,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5DAE25323A77C3B00D6FBFA /* ReceiptView.xib in Resources */,
 				B5F1C7682345DDE60011442B /* TransactionsController.xib in Resources */,
 				B5F1C76B2345F35D0011442B /* ConfirmOrderController.xib in Resources */,
 				B57DB746233CA201008ED1EE /* OrdersCell.xib in Resources */,
@@ -317,6 +346,7 @@
 				B5A9BB9823221B7000DF756B /* Assets.xcassets in Resources */,
 				B5545A8A2338AD5000359873 /* BalanceCell.xib in Resources */,
 				B5C682C42355DA9B00636D6A /* CreateOrderController.xib in Resources */,
+				B5DAE24C23A74B5C00D6FBFA /* LoadingView.xib in Resources */,
 				B5F1C7662345BBCB0011442B /* TransactionsCell.xib in Resources */,
 				B5A9BB9623221B6E00DF756B /* Main.storyboard in Resources */,
 			);
@@ -384,10 +414,12 @@
 				B5545A802338A83600359873 /* Erc20Adapter.swift in Sources */,
 				B5545A792338A79600359873 /* BalanceControllerTable.swift in Sources */,
 				B5545A7E2338A82200359873 /* EthereumAdapter.swift in Sources */,
+				B5DAE24E23A74B7200D6FBFA /* LoadingView.swift in Sources */,
 				B5545A832338AA6C00359873 /* TransactionRecord.swift in Sources */,
 				B5F2F1682333BA54001D4926 /* MainTabController.swift in Sources */,
 				B53FF45A239E321F009D131B /* BalanceController.swift in Sources */,
 				B5F2F16523336F59001D4926 /* MainViewModel.swift in Sources */,
+				B5DAE25123A77BED00D6FBFA /* ReceiptView.swift in Sources */,
 				B5C682C22355DA8400636D6A /* CreateOrderController.swift in Sources */,
 				B5545A7C2338A80E00359873 /* IAdapter.swift in Sources */,
 			);

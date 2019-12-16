@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CardViewControllerDelegate {
+  func dismissController(duration: TimeInterval)
+}
+
 class CardViewController: UIViewController {
   var expandedHeight: CGFloat {
     return 0
@@ -18,4 +22,6 @@ class CardViewController: UIViewController {
   var animationDuration: TimeInterval {
     return 0
   }
+  
+  var cardViewDelegate: CardViewControllerDelegate?
 }

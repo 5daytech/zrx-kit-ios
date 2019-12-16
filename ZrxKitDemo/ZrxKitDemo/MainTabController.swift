@@ -8,6 +8,7 @@
 
 import UIKit
 import zrxkit
+import Web3
 
 class MainTabController: UITabBarController {
   
@@ -29,10 +30,16 @@ class MainTabController: UITabBarController {
   var cardViewController: CardViewController!
   let cardViewSpacing: CGFloat = 16
   
+  var nextCardViews: [CardViewController] = []
+  
+  var isLoading = false
+  
   let viewModel = MainViewModel()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    viewModel.mainTabBarController = self
     
     let balanceController = BalanceController.instance(viewModel: viewModel)
     let balanceNavigation = UINavigationController(rootViewController: balanceController)
@@ -73,7 +80,7 @@ class MainTabController: UITabBarController {
     }
   }
   
-  func setupCardViewController(_ side: EOrderSide, _ vc: CardViewController) {
+  func setupCardViewController(_ vc: CardViewController) {
     visualEffectView = UIVisualEffectView()
     visualEffectView.frame = self.view.frame
     self.view.addSubview(visualEffectView)
@@ -149,6 +156,8 @@ class MainTabController: UITabBarController {
           self.cardViewController.view.removeFromSuperview()
           self.visualEffectView.removeFromSuperview()
           self.cardViewController = nil
+          self.checkNext()
+          
         }
       }
       
@@ -207,18 +216,56 @@ class MainTabController: UITabBarController {
       animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
     }
   }
+  
+  func checkNext() {
+    if isLoading {
+      let vc = LoadingView()
+      setupCardViewController(vc)
+      animateTransitionIfNeeded(state: .expanded, duration: vc.animationDuration)
+    } else {
+      if !nextCardViews.isEmpty {
+        let vc = nextCardViews[0]
+        setupCardViewController(vc)
+        animateTransitionIfNeeded(state: .expanded, duration: vc.animationDuration)
+        nextCardViews.remove(at: 0)
+      }
+    }
+  }
+  
+  func showLoading() {
+    if self.isLoading { return }
+    self.isLoading = true
+  }
+  
+  func hideLoading() {
+    if !isLoading { return }
+    isLoading = false
+    animateTransitionIfNeeded(state: .collapsed, duration: 0)
+  }
+  
+  func showReceipt(receipt: EthereumTransactionReceiptObject) {
+    nextCardViews.append(ReceiptView.instance(receipt: receipt))
+  }
 }
 
 extension MainTabController: OrdersControllerDelegate {
   func showCreateOrderStep(_ side: EOrderSide) {
     let vc = CreateOrderController.instance(side, viewModel)
-    setupCardViewController(side, vc)
-    animateTransitionIfNeeded(state: nextState, duration: vc.animationDuration)
+    vc.cardViewDelegate = self
+    setupCardViewController(vc)
+    animateTransitionIfNeeded(state: .expanded, duration: vc.animationDuration)
   }
   
   func showConfirmOrderStep(_ side: EOrderSide, _ order: SignedOrder) {
     let vc = ConfirmOrderController.instance(viewModel: viewModel, order, side)
-    setupCardViewController(side, vc)
-    animateTransitionIfNeeded(state: nextState, duration: vc.animationDuration)
+    vc.cardViewDelegate = self
+    setupCardViewController(vc)
+    animateTransitionIfNeeded(state: .expanded, duration: vc.animationDuration)
+  }
+}
+
+extension MainTabController: CardViewControllerDelegate {
+  func dismissController(duration: TimeInterval) {
+    animateTransitionIfNeeded(state: .collapsed, duration: duration)
   }
 }

@@ -39,6 +39,8 @@ class MainViewModel {
   var lastBlockHeight = PublishSubject<Int?>()
   var transactions: BehaviorRelay<[TransactionRecord]> = BehaviorRelay(value: [])
   
+  var mainTabBarController: MainTabController?
+  
   let adapters: [IAdapter]
   
   var assetPair: Pair<AssetItem, AssetItem> {
@@ -107,8 +109,6 @@ class MainViewModel {
         print("Orders refresh error: \(error)")
       }).disposed(by: disposeBag)
     }
-  
-  
   
   private func updateLastBlockHeight() {
     lastBlockHeight.onNext(ethereumAdapter.lastBlockHeight)
@@ -179,6 +179,7 @@ class MainViewModel {
   }
   
   func fillOrder(_ order: SignedOrder, _ side: EOrderSide, _ amount: Decimal) {
+    mainTabBarController?.showLoading()
     var big = amount * pow(10, decimals)
     var rounded = Decimal()
     NSDecimalRound(&rounded, &big, 0, .plain)
@@ -186,26 +187,22 @@ class MainViewModel {
     checkAllowance().observeOn(MainScheduler.instance).subscribe(onNext: { (allowed) in
       if allowed {
         self.zrxExchangeContract.marketBuyOrders(orders: [order], fillAmount: amountBigUInt, onReceipt: { receipt in
-          if receipt.status == 1 {
-            print("Cool")
-          } else {
-            print("Error")
-          }
+          self.mainTabBarController?.hideLoading()
+          self.mainTabBarController?.showReceipt(receipt: receipt)
         }, onFill: { response in
-          print(response)
-          print("Filled !!!")
           self.refreshOrders()
         }).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
           print(data.hex())
         }, onError: { (err) in
+          self.mainTabBarController?.hideLoading()
           print(err)
         }, onCompleted: {
-          print("Completed")
         }).disposed(by: self.disposeBag)
       } else {
         print("Unlock tokens")
       }
     }, onError: { (err) in
+      self.mainTabBarController?.hideLoading()
       print(err)
     }, onCompleted: {
       print("fill order completed")
@@ -219,23 +216,20 @@ class MainViewModel {
   }
   
   func cancelOrder(_ order: SignedOrder) {
+    mainTabBarController?.showLoading()
     zrxExchangeContract.cancelOrder(order: order, onReceipt: { (receipt) in
-      if receipt.status == 1 {
-        print("Cool")
-      } else {
-        print("Error")
-      }
+      self.mainTabBarController?.hideLoading()
+      self.mainTabBarController?.showReceipt(receipt: receipt)
     }, onCancel:  { (response) in
-      print(response)
-      print("Canceled !!!")
+      self.mainTabBarController?.hideLoading()
       self.refreshOrders()
     }).observeOn(MainScheduler.instance).subscribe(onNext: { (data) in
       print(data.hex())
     }, onError: { (err) in
+      self.mainTabBarController?.hideLoading()
       print(err)
     }, onCompleted: {
-      print("cancel completed")
-      }).disposed(by: disposeBag)
+    }).disposed(by: disposeBag)
   }
   
   func wrapEther(_ amount: Decimal) {
