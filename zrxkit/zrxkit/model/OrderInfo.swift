@@ -2,7 +2,7 @@ import Foundation
 import BigInt
 
 public struct OrderInfo {
-  let orderStatus: String
-  let orderHash: String
+  let orderStatus: UInt8
+  let orderHash: Data
   let orderTakerAssetFilledAmount: BigUInt
 }

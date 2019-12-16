@@ -12,7 +12,14 @@ public class Contract: GenericERC20Contract {
   private var onReceiptCallback: ((EthereumTransactionReceiptObject) -> Void)?
   private var watchingEvents: [SolidityEvent]?
   
-  init(address: EthereumAddress, eth: Web3.Eth, privateKey: EthereumPrivateKey, gasProvider: ContractGasProvider, networkType: ZrxKit.NetworkType) {
+  init(
+    address: EthereumAddress,
+    eth: Web3.Eth,
+    privateKey: EthereumPrivateKey,
+    gasProvider: ContractGasProvider,
+    networkType: ZrxKit.NetworkType
+  )
+  {
     self.privateKey = privateKey
     self.networkType = networkType
     self.gasProvider = gasProvider
@@ -39,12 +46,15 @@ public class Contract: GenericERC20Contract {
     }
   }
   
-  func executeTransaction(invocation: SolidityInvocation?,
-                          value: EthereumQuantity?,
-                          watchEvents: [SolidityEvent]? = nil,
-                          data: EthereumData = EthereumData([]),
-                          onReceipt: ((EthereumTransactionReceiptObject) -> Void)? = nil,
-                          onEvent: ((SolidityEmittedEvent) -> Void)? = nil) -> Observable<EthereumData> {
+  func executeTransaction(
+    invocation: SolidityInvocation?,
+    value: EthereumQuantity?,
+    watchEvents: [SolidityEvent]? = nil,
+    data: EthereumData = EthereumData([]),
+    onReceipt: ((EthereumTransactionReceiptObject) -> Void)? = nil,
+    onEvent: ((SolidityEmittedEvent) -> Void)? = nil
+  ) -> Observable<EthereumData>
+  {
     return executeTransaction(invocation: invocation,
                               value: value,
                               address: address!,
@@ -54,13 +64,16 @@ public class Contract: GenericERC20Contract {
                               onEvent: onEvent)
   }
   
-  func executeTransaction(invocation: SolidityInvocation?,
-                          value: EthereumQuantity?,
-                          address: EthereumAddress,
-                          watchEvents: [SolidityEvent]? = nil,
-                          data: EthereumData = EthereumData([]),
-                          onReceipt: ((EthereumTransactionReceiptObject) -> Void)? = nil,
-                          onEvent: ((SolidityEmittedEvent) -> Void)? = nil) -> Observable<EthereumData> {
+  func executeTransaction(
+    invocation: SolidityInvocation?,
+    value: EthereumQuantity?,
+    address: EthereumAddress,
+    watchEvents: [SolidityEvent]? = nil,
+    data: EthereumData = EthereumData([]),
+    onReceipt: ((EthereumTransactionReceiptObject) -> Void)? = nil,
+    onEvent: ((SolidityEmittedEvent) -> Void)? = nil
+  ) -> Observable<EthereumData>
+  {
     onReceiptCallback = onReceipt
     onEventCallback = onEvent
     watchingEvents = watchEvents
@@ -99,7 +112,14 @@ public class Contract: GenericERC20Contract {
     }
   }
   
-  private func createTransaction(invocation: SolidityInvocation?, value: EthereumQuantity?, nonce: EthereumQuantity, address: EthereumAddress, data: EthereumData) -> EthereumTransaction? {
+  private func createTransaction(
+    invocation: SolidityInvocation?,
+    value: EthereumQuantity?,
+    nonce: EthereumQuantity,
+    address: EthereumAddress,
+    data: EthereumData
+  ) -> EthereumTransaction?
+  {
     if invocation != nil {
       return invocation!.createTransaction(
         nonce: nonce,
@@ -108,7 +128,6 @@ public class Contract: GenericERC20Contract {
         gas: EthereumQuantity(quantity: gasProvider.getGasLimit(invocation!.method.name)),
         gasPrice: EthereumQuantity(quantity: gasProvider.getGasPrice(invocation!.method.name)))
     }
-    
     return EthereumTransaction(
       nonce: nonce,
       gasPrice: EthereumQuantity(quantity: gasProvider.getGasPrice()),

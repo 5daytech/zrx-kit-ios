@@ -259,8 +259,39 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
   }
   
   public func ordersInfo(orders: [SignedOrder]) -> Observable<[OrderInfo]> {
-    return Observable.create { (observer) -> Disposable in
-      return Disposables.create()
+    let inputs: [SolidityFunctionParameter] = [
+      SolidityFunctionParameter(name: "orders", type: .array(type: .tuple(orderTypes), length: nil))
+    ]
+    let outputs: [SolidityFunctionParameter] = [
+      SolidityFunctionParameter(name: "", type: .array(type: .tuple([.uint8, .bytes(length: 32), .uint256]), length: nil))
+    ]
+    let method = SolidityConstantFunction(name: "getOrdersInfo", inputs: inputs, outputs: outputs, handler: self)
+    let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
+    let invocation = method.invoke(ordersInTuple)
+    return read(method: invocation) { (dict) -> [OrderInfo] in
+      var ordersInfo = [OrderInfo]()
+      for value in dict.values {
+        if let arrayOfTuples = value as? [[Any]] {
+          for tuple in arrayOfTuples {
+            guard let orderStatus = tuple[0] as? Byte else {
+              continue
+            }
+            
+            guard let orderHash = tuple[1] as? Data else {
+              continue
+            }
+            
+            guard let orderTakerAssetFilledAmount = tuple[2] as? BigUInt else {
+              continue
+            }
+            
+            ordersInfo.append(OrderInfo(orderStatus: orderStatus,
+                                        orderHash: orderHash,
+                                        orderTakerAssetFilledAmount: orderTakerAssetFilledAmount))
+          }
+        }
+      }
+      return ordersInfo
     }
   }
   
