@@ -121,22 +121,22 @@ public class SignUtils {
   func isValidSignature(_ signedOrder: SignedOrder) -> Bool {
     let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(signedOrder), domain: getDomain(signedOrder))
     
-    let encoder = Eip712Encoder(structured)
-    let dataHash = encoder.hashStructuredData()
-    let type = getSignatureType(signedOrder.signature)
-    
-    var isValid = false
-    for i in 27...28 {
-      let restoredVrs = rsvFromSignatureHex(signedOrder.signature)
-      switch type {
-      case .EIP712:
-        break
-      case .ETH_SIGN:
-        break
-      default:
-        fatalError("Not implemented yet")
-      }
-    }
+//    let encoder = Eip712Encoder(structured)
+//    let dataHash = encoder.hashStructuredData()
+//    let type = getSignatureType(signedOrder.signature)
+//
+//    var isValid = false
+//    for i in 27...28 {
+//      let restoredVrs = rsvFromSignatureHex(signedOrder.signature)
+//      switch type {
+//      case .EIP712:
+//        break
+//      case .ETH_SIGN:
+//        break
+//      default:
+//        fatalError("Not implemented yet")
+//      }
+//    }
     
     return true
   }
