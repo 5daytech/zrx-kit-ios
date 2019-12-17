@@ -58,7 +58,7 @@ public class ZrxKit {
   }
   
   public func signOrder(_ order: Order) -> SignedOrder? {
-    return SignUtils().ecSignOrder(order, privateKey)
+    return SignUtils().ecSignOrder(order, privateKey, networkType.id)
   }
   
   public enum NetworkType {

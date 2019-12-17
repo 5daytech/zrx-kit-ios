@@ -38,8 +38,8 @@ public class SignUtils {
     ]
   ]
   
-  private func getOrderSignature(_ order: IOrder, _ privateKey: EthereumPrivateKey) -> String {
-    let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(order), domain: getDomain(order))
+  private func getOrderSignature(_ order: IOrder, _ privateKey: EthereumPrivateKey, _ chainId: Int) -> String {
+    let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(order), domain: getDomain(order, chainId))
     let encoder = Eip712Encoder(structured)
     
     try! encoder.validateStructuredData(structured)
@@ -55,14 +55,6 @@ public class SignUtils {
     resultArray.append(2)
     
     return resultArray.toHexString().prefixed()
-  }
-  
-  private func rsvFromSignatureHex(_ signatureHex: String) -> (v: UInt, r: Bytes, s: Bytes) {
-    let decodedSignature = signatureHex.clearPrefix().hexToBytes()
-    
-    return (UInt(decodedSignature[V_INDEX]),
-            Array(decodedSignature[R_RANGE]),
-            Array(decodedSignature[S_RANGE]))
   }
   
   internal func signedMessageHashToKey(_ messageHash: Bytes, _ signatureData: (v: UInt, r: Bytes, s: Bytes)) -> BigUInt {
@@ -105,40 +97,14 @@ public class SignUtils {
     ]
   }
   
-  private func getDomain(_ order: IOrder) -> Eip712Data.EIP712Domain {
-    return Eip712Data.EIP712Domain(name: "0x Protocol", version: "2", chainId: 3, verifyingContract: order.exchangeAddress)
+  private func getDomain(_ order: IOrder, _ chainId: Int) -> Eip712Data.EIP712Domain {
+    return Eip712Data.EIP712Domain(name: "0x Protocol", version: "2", chainId: chainId, verifyingContract: order.exchangeAddress)
   }
   
-  public func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey) -> SignedOrder? {
-    let signature = getOrderSignature(order, privateKey)
+  public func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey, _ chainId: Int) -> SignedOrder? {
+    let signature = getOrderSignature(order, privateKey, chainId)
     let signedOrder = SignedOrder.fromOrder(order: order, signature: signature)
-    if isValidSignature(signedOrder) {
-      return signedOrder
-    }
-    return nil
-  }
-  
-  func isValidSignature(_ signedOrder: SignedOrder) -> Bool {
-    let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(signedOrder), domain: getDomain(signedOrder))
-    
-//    let encoder = Eip712Encoder(structured)
-//    let dataHash = encoder.hashStructuredData()
-//    let type = getSignatureType(signedOrder.signature)
-//
-//    var isValid = false
-//    for i in 27...28 {
-//      let restoredVrs = rsvFromSignatureHex(signedOrder.signature)
-//      switch type {
-//      case .EIP712:
-//        break
-//      case .ETH_SIGN:
-//        break
-//      default:
-//        fatalError("Not implemented yet")
-//      }
-//    }
-    
-    return true
+    return signedOrder
   }
   
   func getSignatureType(_ signatureHex: String) -> ESignatureType {
