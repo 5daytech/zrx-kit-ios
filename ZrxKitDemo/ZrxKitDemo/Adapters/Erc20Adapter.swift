@@ -5,17 +5,17 @@ import class Erc20Kit.TransactionInfo
 import RxSwift
 
 class Erc20Adapter {
-  private let ethereumKit: EthereumKit
-  private let erc20Kit: Erc20Kit
+  private let ethereumKit: EthereumKit.Kit
+  private let erc20Kit: Erc20Kit.Kit
 
   let name: String
   let coin: String
 
   private let decimal: Int
 
-  init(ethereumKit: EthereumKit, name: String, coin: String, contractAddress: String, decimal: Int) {
+  init(ethereumKit: EthereumKit.Kit, name: String, coin: String, contractAddress: String, decimal: Int) {
     self.ethereumKit = ethereumKit
-    self.erc20Kit = try! Erc20Kit.instance(
+    self.erc20Kit = try! Erc20Kit.Kit.instance(
       ethereumKit: ethereumKit,
       contractAddress: contractAddress
     )
@@ -113,7 +113,7 @@ extension Erc20Adapter: IAdapter {
 
     let value = String(describing: roundedDecimal)
 
-    return try! erc20Kit.sendSingle(to: to, value: value, gasPrice: 5_000_000_000).map { _ in ()}
+    return try! erc20Kit.sendSingle(to: to, value: value, gasPrice: 5_000_000_000, gasLimit: 21_000).map { _ in ()}
   }
 
   func transactionsSingle(from: (hash: String, interTransactionIndex: Int)?, limit: Int?) -> Single<[TransactionRecord]> {

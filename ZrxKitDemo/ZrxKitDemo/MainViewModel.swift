@@ -21,7 +21,7 @@ class MainViewModel {
   private let zrxKitNetworkType: ZrxKit.NetworkType = .Ropsten
   
   private let zrxKit: ZrxKit
-  let ethereumKit: EthereumKit
+  let ethereumKit: EthereumKit.Kit
   let wethContract: IWethWrapper
   private let ethereumAdapter: EthereumAdapter
   private let wethAdapter: Erc20Adapter
@@ -58,7 +58,8 @@ class MainViewModel {
     let relayers = [Relayer(id: 0, name: "BDRelayer", availablePairs: pairs, feeRecipients: [feeRecipient], exchangeAddress: zrxKitNetworkType.exchangeAddress, config: config)]
     
     zrxKit = ZrxKit.getInstance(relayers: relayers, privateKey: privateKey, infuraKey: infuraCredentials.secret!)
-    ethereumKit = try! EthereumKit.instance(privateKey: privateKey, syncMode: .api, networkType: networkType, infuraCredentials: infuraCredentials, etherscanApiKey: etherscanKey, walletId: "default")
+    ethereumKit = try! EthereumKit.Kit.instance(privateKey: privateKey, syncMode: .api, networkType: networkType, infuraCredentials: infuraCredentials, etherscanApiKey: etherscanKey, walletId: "default")
+    
     
     zrxExchangeContract = zrxKit.getExchangeInstance()
     wethContract = zrxKit.getWethWrapperInstance()

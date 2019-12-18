@@ -28,6 +28,6 @@ end
 target :ZrxKitDemo do
     project 'ZrxKitDemo/ZrxKitDemo'
     common_pods
-    pod 'EthereumKit.swift', git: 'https://github.com/horizontalsystems/ethereum-kit-ios/'
-    pod 'Erc20Kit.swift', git: 'https://github.com/horizontalsystems/ethereum-kit-ios/'
+    pod 'EthereumKit.swift', '0.8'
+    pod 'Erc20Kit.swift', '0.8'
 end

@@ -4,13 +4,13 @@
 
 ## Environment
 .env
-Configuration/
 certificates/
 
 .rbenv-gemsets
 .ruby-version
 Gemfile
 Gemfile.lock
+.DS_Store
 
 ## Build generated
 build/

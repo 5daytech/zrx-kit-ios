@@ -3,10 +3,10 @@ import EthereumKit
 import RxSwift
 
 class EthereumAdapter {
-  private let ethereumKit: EthereumKit
+  private let ethereumKit: EthereumKit.Kit
   private let decimal = 18
   
-  init(ethereumKit: EthereumKit) {
+  init(ethereumKit: EthereumKit.Kit) {
     self.ethereumKit = ethereumKit
   }
   
