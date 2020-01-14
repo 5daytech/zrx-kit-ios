@@ -10,32 +10,57 @@ class RelayerApiClient {
     relayerConfig = config
   }
   
-  func getOrderBook(base: String, quote: String, networkId: Int = 3) -> Observable<OrderBookResponse> {
-    let urlConvertible = RelayerNetworkClient.getOrderBook(url: "\(relayerConfig.url)/orderbook", baseAsset: base, quoteAsset: quote, networkId: networkId)
+  func getOrderBook(base: String, quote: String) -> Observable<OrderBookResponse> {
+    let urlConvertible = RelayerNetworkClient.getOrderBook(url: "\(relayerConfig.url)/orderbook", baseAsset: base, quoteAsset: quote)
     return request(try! urlConvertible.asURLRequest())
   }
   
-  func feeRecipients(networkId: Int = 3) -> Observable<FeeRecipientsResponse> {
-    let urlConvertible = RelayerNetworkClient.getFeeRecipients(url: "\(relayerConfig.url)/fee_recipients", networkId: networkId)
+  func feeRecipients() -> Observable<FeeRecipientsResponse> {
+    let urlConvertible = RelayerNetworkClient.getFeeRecipients(url: "\(relayerConfig.url)/fee_recipients")
     return request(urlConvertible)
   }
   
-  func getAssets(limit: Int = 100, networkId: Int = 3) -> Observable<AssetPairsResponse> {
-    let urlConvertible = RelayerNetworkClient.getAssetPairs(url: "\(relayerConfig.url)/asset_pairs", perPage: limit, networkId: networkId)
+  func getAssets(limit: Int = 100) -> Observable<AssetPairsResponse> {
+    let urlConvertible = RelayerNetworkClient.getAssetPairs(url: "\(relayerConfig.url)/asset_pairs", perPage: limit)
     return request(urlConvertible)
   }
   
-  func postOrder(order: SignedOrder, networkId: Int) -> Observable<UInt> {
-    let urlConvertible = RelayerNetworkClient.postOrder(url: "\(relayerConfig.url)/order", order: order, networkId: networkId)
+  func postOrder(order: SignedOrder) -> Observable<UInt> {
+    let urlConvertible = RelayerNetworkClient.postOrder(url: "\(relayerConfig.url)/order", order: order)
+    
+    return Observable.create { observer in
+      let request = Alamofire.request(try! urlConvertible.asURLRequest()).responseData(completionHandler: { (response) in
+        let statusCode = response.response?.statusCode
+        switch response.result {
+        case .success:
+          if statusCode == 200 {
+            observer.onNext(1)
+          }
+          observer.onCompleted()
+        case .failure(let error):
+          observer.onError(error)
+        }
+      })
+      return Disposables.create {
+        request.cancel()
+      }
+    }
+  }
+  
+  func getOrders(makerAddress: String?, limit: Int?) -> Observable<OrderBook> {
+    let urlConvertible = RelayerNetworkClient.getOrders(url: "\(relayerConfig.url)/orders", makerAddress: makerAddress, limit: limit)
     return request(try! urlConvertible.asURLRequest())
   }
   
   private func request<T: Codable>(_ urlConvertible: URLRequestConvertible) -> Observable<T> {
     return Observable<T>.create { observer in
       let request = Alamofire.request(urlConvertible).responseData(completionHandler: { (response) in
+        
+        let statusCode = response.response?.statusCode
+        
         switch response.result {
         case .success(let value):
-          do {            
+          do {
             let decoded = try JSONDecoder().decode(T.self, from: value)
             observer.onNext(decoded)
             observer.onCompleted()
@@ -54,23 +79,27 @@ class RelayerApiClient {
 }
 
 enum RelayerNetworkClient: URLRequestConvertible {
-  case getOrderBook(url: String, baseAsset: String, quoteAsset: String, networkId: Int)
-  case getFeeRecipients(url: String, networkId: Int)
-  case postOrder(url: String, order: SignedOrder, networkId: Int)
-  case getAssetPairs(url: String, perPage: Int, networkId: Int)
+  case getOrderBook(url: String, baseAsset: String, quoteAsset: String)
+  case getFeeRecipients(url: String)
+  case postOrder(url: String, order: SignedOrder)
+  case getAssetPairs(url: String, perPage: Int)
+  case getOrders(url: String, makerAddress: String?, limit: Int?)
   
   func asURLRequest() throws -> URLRequest {
     var url: URL!
     var urlRequest: URLRequest!
     
     switch self {
-    case .getOrderBook(let inUrl, _, _, _):
+    case .getOrderBook(let inUrl, _, _):
       url = try inUrl.asURL()
       urlRequest = URLRequest(url: url)
-    case .postOrder(let inUrl, _, _):
+    case .postOrder(let inUrl, _):
       url = try inUrl.asURL()
       urlRequest = URLRequest(url: url)
       urlRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
+    case .getOrders(let inUrl, _, _):
+      url = try inUrl.asURL()
+      urlRequest = URLRequest(url: url)
     default:
       fatalError()
     }
@@ -94,7 +123,7 @@ enum RelayerNetworkClient: URLRequestConvertible {
   
   private var method: HTTPMethod {
     switch self {
-    case .getOrderBook, .getAssetPairs, .getFeeRecipients:
+    case .getOrderBook, .getAssetPairs, .getFeeRecipients, .getOrders:
       return .get
     case .postOrder:
       return .post
@@ -103,20 +132,22 @@ enum RelayerNetworkClient: URLRequestConvertible {
   
   private var parameters: Parameters? {
     switch self {
-    case .getOrderBook(_, let baseAsset, let quoteAsset, let networkId):
-      return ["baseAssetData": baseAsset, "quoteAssetData": quoteAsset, "networkId": networkId]
-    case .getFeeRecipients(_, let networkId):
-      return ["networkId": networkId]
-    case .getAssetPairs(_, let perPage, let networkId):
-      return ["perPage": perPage, "networkId": networkId]
-    case .postOrder(_, _, let networkId):
-      return ["networkId": networkId]
+    case .getOrderBook(_, let baseAsset, let quoteAsset):
+      return ["baseAssetData": baseAsset, "quoteAssetData": quoteAsset]
+    case .getFeeRecipients(_):
+      return [:]
+    case .getAssetPairs(_, let perPage):
+      return ["perPage": perPage]
+    case .postOrder(_, _):
+      return [:]
+    case .getOrders(_, let makerAddress, let limit):
+      return ["makerAddress": makerAddress ?? "", "perPage": limit ?? 0]
     }
   }
   
   private var body: Data? {
     switch self {
-    case .postOrder(_, let order, _):
+    case .postOrder(_, let order):
       return try? JSONEncoder().encode(order)
     default:
       return nil

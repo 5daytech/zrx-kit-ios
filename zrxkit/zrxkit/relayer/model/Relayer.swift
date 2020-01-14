@@ -12,7 +12,7 @@ public struct Relayer {
   let id: Int
   let name: String
   public let availablePairs: [Pair<AssetItem, AssetItem>]
-  let feeRecipients: [String]
+  public let feeRecipients: [String]
   let exchangeAddress: String
   let config: RelayerConfig
 }

@@ -12,6 +12,8 @@ Gemfile
 Gemfile.lock
 .DS_Store
 
+
+
 ## Build generated
 build/
 DerivedData/

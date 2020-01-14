@@ -1,6 +1,8 @@
 import Foundation
 
 public struct Order: IOrder, Codable {
+  public var chainId: Int
+  
   public var exchangeAddress: String
   
   public var makerAssetData: String
@@ -23,11 +25,33 @@ public struct Order: IOrder, Codable {
   
   public var makerFee: String
   
+  public var makerFeeAssetData: String
+  
   public var takerFee: String
+  
+  public var takerFeeAssetData: String
   
   public var salt: String
   
-  public init(exchangeAddress: String, makerAssetData: String, takerAssetData: String, makerAssetAmount: String, takerAssetAmount: String, makerAddress: String, takerAddress: String, expirationTimeSeconds: String, senderAddress: String, feeRecipientAddress: String, makerFee: String, takerFee: String, salt: String) {
+  public init(
+    chainId: Int,
+    exchangeAddress: String,
+    makerAssetData: String,
+    takerAssetData: String,
+    makerAssetAmount: String,
+    takerAssetAmount: String,
+    makerAddress: String,
+    takerAddress: String,
+    expirationTimeSeconds: String,
+    senderAddress: String,
+    feeRecipientAddress: String,
+    makerFee: String,
+    makerFeeAssetData: String,
+    takerFee: String,
+    takerFeeAssetData: String,
+    salt: String
+  ) {
+    self.chainId = chainId
     self.exchangeAddress = exchangeAddress
     self.makerAssetData = makerAssetData
     self.takerAssetData = takerAssetData
@@ -39,7 +63,9 @@ public struct Order: IOrder, Codable {
     self.senderAddress = senderAddress
     self.feeRecipientAddress = feeRecipientAddress
     self.makerFee = makerFee
+    self.makerFeeAssetData = makerFeeAssetData
     self.takerFee = takerFee
+    self.takerFeeAssetData = takerFeeAssetData
     self.salt = salt
   }
 }

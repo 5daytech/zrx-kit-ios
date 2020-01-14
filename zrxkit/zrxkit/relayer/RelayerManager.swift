@@ -17,18 +17,18 @@ class RelayerManager: IRelayerManager {
   }
   
   func getAssetPairs(relayerId: Int) -> Observable<[AssetPair]> {
-    return relayerClients[relayerId].getAssets(limit: 100, networkId: networkType.id).map { $0.records }
+    relayerClients[relayerId].getAssets(limit: 100).map { $0.records }
   }
   
-  func getOrderbook(relayerId: Int, base: String, qoute: String) -> Observable<OrderBookResponse> {
-    return relayerClients[relayerId].getOrderBook(base: base, quote: qoute, networkId: networkType.id)
+  func getOrderbook(relayerId: Int, base: String, quote: String) -> Observable<OrderBookResponse> {
+    relayerClients[relayerId].getOrderBook(base: base, quote: quote)
   }
   
   func postOrder(relayerId: Int, order: SignedOrder) -> Observable<UInt> {
-    return relayerClients[relayerId].postOrder(order: order, networkId: networkType.id)
+    relayerClients[relayerId].postOrder(order: order)
   }
   
-  func getOrders(relayerId: Int, makerAddress: String, makerAsset: String, takerAsset: String) -> Observable<OrderBookResponse> {
-    fatalError("Get orders not implemented")
+  func getOrders(relayerId: Int, makerAddress: String, limit: Int) -> Observable<OrderBook> {
+    relayerClients[relayerId].getOrders(makerAddress: makerAddress, limit: limit)
   }
 }

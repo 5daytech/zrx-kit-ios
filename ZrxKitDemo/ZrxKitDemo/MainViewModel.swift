@@ -12,7 +12,7 @@ class MainViewModel {
   private let infuraCredentials: (id: String, secret: String?) = (id: "0c3f9e6a005b40c58235da423f58b198",
                                                                  secret: "57b6615fb10b4749a54b29c2894a00df")
   private let etherscanKey = "GKNHXT22ED7PRVCKZATFZQD1YI7FK9AAYE"
-  private let feeRecipient = "0x2e8da0868e46fc943766a98b8d92a0380b29ce2a"
+  private let feeRecipient = "0xA5004C8b2D64AD08A80d33Ad000820d63aa2cCC9".lowercased()
   private let wethAddress = "0xc778417e063141139fce010982780140aa0cd5ab"
   private let tokenAddress = "0x30845a385581ce1dc51d651ff74689d7f4415146"
   private let decimals = 18
@@ -51,10 +51,10 @@ class MainViewModel {
 //    let words = "surprise fancy pond panic grocery hedgehog slight relief deal wash clog female".split(separator: " ").map { String($0) }
     let words = "burden crumble violin flip multiply above usual dinner eight unusual clay identify".split(separator: " ").map { String($0) }
     let seed = Mnemonic.seed(mnemonic: words)
-    let hdWallet = HDWallet(seed: seed, coinType: 1, xPrivKey: 0, xPubKey: 0)
+    let hdWallet = HDWallet(seed: seed, coinType: zrxKitNetworkType == ZrxKit.NetworkType.MainNet ? 60 : 1, xPrivKey: 0, xPubKey: 0)
     let privateKey = try! hdWallet.privateKey(account: 0, index: 0, chain: .external).raw
     let pairs = [Pair<AssetItem, AssetItem>(first: ZrxKit.assetItemForAddress(address: tokenAddress), second: ZrxKit.assetItemForAddress(address: wethAddress))]
-    let config = RelayerConfig(baseUrl: "https://ropsten.api.udex.app/sra", suffix: "", version: "v2")
+    let config = RelayerConfig(baseUrl: "https://ropsten.api.udex.app/sra", suffix: "", version: "v3")
     let relayers = [Relayer(id: 0, name: "BDRelayer", availablePairs: pairs, feeRecipients: [feeRecipient], exchangeAddress: zrxKitNetworkType.exchangeAddress, config: config)]
     
     zrxKit = ZrxKit.getInstance(relayers: relayers, privateKey: privateKey, infuraKey: infuraCredentials.secret!)
@@ -100,7 +100,7 @@ class MainViewModel {
   }
   
   func refreshOrders() {
-    zrxKit.relayerManager.getOrderbook(relayerId: 0, base: assetPair.first.assetData, qoute: assetPair.second.assetData)
+    zrxKit.relayerManager.getOrderbook(relayerId: 0, base: assetPair.first.assetData, quote: assetPair.second.assetData)
       .subscribeOn(ConcurrentDispatchQueueScheduler(qos: .background))
       .observeOn(MainScheduler.instance)
       .subscribe(onNext: { (orderBookResponse) in
@@ -299,6 +299,7 @@ class MainViewModel {
     }
     
     let order = Order(
+      chainId: zrxKitNetworkType.id,
       exchangeAddress: zrxKitNetworkType.exchangeAddress,
       makerAssetData: makerAsset,
       takerAssetData: takerAsset,
@@ -310,7 +311,9 @@ class MainViewModel {
       senderAddress: "0x0000000000000000000000000000000000000000",
       feeRecipientAddress: feeRecipient,
       makerFee: "0",
+      makerFeeAssetData: "0x",
       takerFee: "0",
+      takerFeeAssetData: "0x",
       salt: salt
     )
     

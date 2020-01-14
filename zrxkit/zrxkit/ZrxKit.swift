@@ -66,7 +66,7 @@ public class ZrxKit {
     case Ropsten
     case Kovan
     
-    var id: Int {
+    public var id: Int {
       switch self {
       case .MainNet:
         return 1
@@ -80,11 +80,11 @@ public class ZrxKit {
     public var exchangeAddress: String {
       switch self {
       case .MainNet:
-        return "0x080bf510fcbf18b91105470639e9561022937712"
+        return "0x61935cbdd02287b511119ddb11aeb42f1593b7ef"
       case .Ropsten:
-        return "0xbff9493f92a3df4b0429b6d00743b3cfb4c85831"
+        return "0xfb2dd2a1366de37f7241c83d47da58fd503e2c64"
       case .Kovan:
-        return "0x30589010550762d2f0d06f650d8e8b6ade6dbf4b"
+        return "0x4eacd0af335451709e1e7b570b8ea68edec8bc97"
       }
     }
     
@@ -133,7 +133,7 @@ public class ZrxKit {
     }
     
     func getInfuraUrl(infuraKey: String) -> String {
-      return "https://\(subdomain).infura.io/\(infuraKey)"
+      return "https://\(subdomain).fridayte.ch/\(infuraKey)"
     }
   }
   

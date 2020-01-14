@@ -1,6 +1,7 @@
 import Foundation
 
 public protocol IOrder {
+  var chainId: Int { get set }
   var exchangeAddress: String { get set }
   var makerAssetData: String { get set }
   var takerAssetData: String { get set }
@@ -12,6 +13,8 @@ public protocol IOrder {
   var senderAddress: String { get set }
   var feeRecipientAddress: String { get set }
   var makerFee: String { get set }
+  var makerFeeAssetData: String { get set }
   var takerFee: String { get set }
+  var takerFeeAssetData: String { get set }
   var salt: String { get set }
 }

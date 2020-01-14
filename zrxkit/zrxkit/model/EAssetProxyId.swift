@@ -19,10 +19,10 @@ public enum EAssetProxyId: String {
     }
   }
   
-  func decode(asset: String) -> String {
+  public func decode(asset: String) -> String {
     switch self {
     case .ERC20:
-      return "0x\(asset.replacingOccurrences(of: "000000000000000000000000", with: "").lowercased())"
+      return "0x\(asset.replacingOccurrences(of: "\(rawValue)000000000000000000000000", with: "").lowercased())"
     case .ERC721:
       fatalError("ERC721 tokens are not supported yet.")
     case .MultiAsset:

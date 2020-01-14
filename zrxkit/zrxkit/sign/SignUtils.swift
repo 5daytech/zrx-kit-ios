@@ -20,6 +20,7 @@ public class SignUtils {
     "EIP712Domain": [
       Eip712Data.Entry(name: "name", type: "string"),
       Eip712Data.Entry(name: "version", type: "string"),
+      Eip712Data.Entry(name: "chainId", type: "uint256"),
       Eip712Data.Entry(name: "verifyingContract", type: "address")
     ],
     "Order": [
@@ -34,12 +35,14 @@ public class SignUtils {
       Eip712Data.Entry(name: "expirationTimeSeconds", type: "uint256"),
       Eip712Data.Entry(name: "salt", type: "uint256"),
       Eip712Data.Entry(name: "makerAssetData", type: "bytes"),
-      Eip712Data.Entry(name: "takerAssetData", type: "bytes")
+      Eip712Data.Entry(name: "takerAssetData", type: "bytes"),
+      Eip712Data.Entry(name: "makerFeeAssetData", type: "bytes"),
+      Eip712Data.Entry(name: "takerFeeAssetData", type: "bytes")
     ]
   ]
   
-  private func getOrderSignature(_ order: IOrder, _ privateKey: EthereumPrivateKey, _ chainId: Int) -> String {
-    let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(order), domain: getDomain(order, chainId))
+  private func getOrderSignature(_ order: IOrder, _ privateKey: EthereumPrivateKey) -> String {
+    let structured = Eip712Data.EIP712Message(types: types, primaryType: "Order", message: orderToMap(order), domain: getDomain(order))
     let encoder = Eip712Encoder(structured)
     
     try! encoder.validateStructuredData(structured)
@@ -92,17 +95,19 @@ public class SignUtils {
       "takerFee": order.takerFee.toBigUInt(),
       "expirationTimeSeconds": order.expirationTimeSeconds.toBigUInt(),
       "salt": order.salt.toBigUInt(),
-      "makerAssetData": order.makerAssetData.clearPrefix().hexToBytes(), //TODO: Check hex to bytes
-      "takerAssetData": order.takerAssetData.clearPrefix().hexToBytes() //TODO: Check hex to bytes
+      "makerAssetData": order.makerAssetData.clearPrefix().hexToBytes(),
+      "takerAssetData": order.takerAssetData.clearPrefix().hexToBytes(),
+      "makerFeeAssetData": order.makerFeeAssetData.clearPrefix().hexToBytes(),
+      "takerFeeAssetData": order.takerFeeAssetData.clearPrefix().hexToBytes()
     ]
   }
   
-  private func getDomain(_ order: IOrder, _ chainId: Int) -> Eip712Data.EIP712Domain {
-    return Eip712Data.EIP712Domain(name: "0x Protocol", version: "2", chainId: chainId, verifyingContract: order.exchangeAddress)
+  private func getDomain(_ order: IOrder) -> Eip712Data.EIP712Domain {
+    return Eip712Data.EIP712Domain(name: "0x Protocol", version: "3.0.0", chainId: order.chainId, verifyingContract: order.exchangeAddress)
   }
   
   public func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey, _ chainId: Int) -> SignedOrder? {
-    let signature = getOrderSignature(order, privateKey, chainId)
+    let signature = getOrderSignature(order, privateKey)
     let signedOrder = SignedOrder.fromOrder(order: order, signature: signature)
     return signedOrder
   }

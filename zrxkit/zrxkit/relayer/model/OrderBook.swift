@@ -9,9 +9,10 @@ public struct OrderBook: Codable {
 
 public struct OrderRecord: Codable {
   public let order: SignedOrder
-  let metaData: OrderMetaData
+  public let metaData: OrderMetaData
 }
 
 public struct OrderMetaData: Codable {
-  let orderHash: String
+  public let orderHash: String
+  public let remainingFillableTakerAssetAmount: String?
 }

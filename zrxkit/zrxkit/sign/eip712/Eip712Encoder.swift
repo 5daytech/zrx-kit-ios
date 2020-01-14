@@ -284,7 +284,7 @@ internal class Eip712Encoder {
     data["name"] = jsonMessageObject.domain.name
     
     if jsonMessageObject.domain.chainId > 0 {
-      data["chainId"] = jsonMessageObject.domain.chainId
+      data["chainId"] = BigUInt(jsonMessageObject.domain.chainId)
     }
     
     data["version"] = jsonMessageObject.domain.version

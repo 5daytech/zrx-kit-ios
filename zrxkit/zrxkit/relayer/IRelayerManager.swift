@@ -6,9 +6,9 @@ public protocol IRelayerManager {
   
   func getAssetPairs(relayerId: Int) -> Observable<[AssetPair]>
   
-  func getOrderbook(relayerId: Int, base: String, qoute: String) -> Observable<OrderBookResponse>
+  func getOrderbook(relayerId: Int, base: String, quote: String) -> Observable<OrderBookResponse>
   
   func postOrder(relayerId: Int, order: SignedOrder) -> Observable<UInt>
   
-  func getOrders(relayerId: Int, makerAddress: String, makerAsset: String, takerAsset: String) -> Observable<OrderBookResponse>
+  func getOrders(relayerId: Int, makerAddress: String, limit: Int) -> Observable<OrderBook>
 }
