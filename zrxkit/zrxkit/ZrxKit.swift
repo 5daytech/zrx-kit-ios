@@ -7,6 +7,14 @@ public class ZrxKit {
   static private let minAmount = BigUInt(0)
   static private let maxAmount = BigUInt(999999999999999999)
   
+  public var marketBuyEstimatedPrice: Decimal {
+    get {
+      let price = gasInfoProvider.getGasLimit("marketBuyOrders") * gasInfoProvider.getGasPrice("marketBuyOrders")
+      let decimal = Decimal(string: "\(price)")! / pow(10, Constants.ETH_DECIMALS)
+      return decimal
+    }
+  }
+  
   public static func getInstance(relayers: [Relayer], privateKey: Data, infuraKey: String, networkType: NetworkType = .Ropsten, gasInfoProvider: ContractGasProvider = defaultGasProvider) -> ZrxKit {
     let relayerManager = RelayerManager(availableRelayers: relayers, networkType: networkType)
     let ethereumPrivateKey = try! EthereumPrivateKey(hexPrivateKey: privateKey.toHexString())
@@ -58,7 +66,12 @@ public class ZrxKit {
   }
   
   public func signOrder(_ order: Order) -> SignedOrder? {
-    return SignUtils().ecSignOrder(order, privateKey, networkType.id)
+    return SignUtils().ecSignOrder(order, privateKey)
+  }
+  
+  public func protocolFeeInEth(fillOrdersCount: Int) -> Decimal {
+    let fee = CoreUtils.getProtocolFee(gasInfoProvider: gasInfoProvider, fillOrderCount: fillOrdersCount)
+    return Decimal(string: "\(fee)")! / pow(10, Constants.ETH_DECIMALS)
   }
   
   public enum NetworkType {

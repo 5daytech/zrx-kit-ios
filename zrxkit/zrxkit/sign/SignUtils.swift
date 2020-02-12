@@ -106,7 +106,7 @@ public class SignUtils {
     return Eip712Data.EIP712Domain(name: "0x Protocol", version: "3.0.0", chainId: order.chainId, verifyingContract: order.exchangeAddress)
   }
   
-  public func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey, _ chainId: Int) -> SignedOrder? {
+  public func ecSignOrder(_ order: Order, _ privateKey: EthereumPrivateKey) -> SignedOrder? {
     let signature = getOrderSignature(order, privateKey)
     let signedOrder = SignedOrder.fromOrder(order: order, signature: signature)
     return signedOrder

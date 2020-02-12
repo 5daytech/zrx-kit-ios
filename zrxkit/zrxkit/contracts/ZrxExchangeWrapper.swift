@@ -157,7 +157,7 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     return address?.hex(eip55: true) ?? ""
   }
   
-  let orderTypes: [SolidityType] = [.address, .address, .address, .address, .uint256, .uint256, .uint256, .uint256, .uint256, .uint256, .bytes(length: nil), .bytes(length: nil)]
+  let orderTypes: [SolidityType] = [.address, .address, .address, .address, .uint256, .uint256, .uint256, .uint256, .uint256, .uint256, .bytes(length: nil), .bytes(length: nil), .bytes(length: nil), .bytes(length: nil)]
   
   public func marketBuyOrders(
     orders: [SignedOrder],
@@ -172,14 +172,14 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
       SolidityFunctionParameter(name: "signatures", type: .array(type: .bytes(length: nil), length: nil))
     ]
     let outputs = [
-      SolidityFunctionParameter(name: "totalFillResults", type: .tuple([.uint256, .uint256, .uint256, .uint256]))
+      SolidityFunctionParameter(name: "fillResults", type: .tuple([.uint256, .uint256, .uint256, .uint256]))
     ]
-    let method = SolidityNonPayableFunction(name: "marketBuyOrders", inputs: inputs, outputs: outputs, handler: self)
+    let method = SolidityNonPayableFunction(name: "marketBuyOrdersNoThrow", inputs: inputs, outputs: outputs, handler: self)
     
     let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
     let ordersSignatures = orders.map { Data(hex: $0.signature.clearPrefix()) }
     let invocation = method.invoke(ordersInTuple, fillAmount, ordersSignatures)
-    return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
+    return executeTransactionForFillEvent(invocation: invocation, protocolFee: CoreUtils.getProtocolFee(gasInfoProvider: gasProvider, fillOrderCount: orders.count), onReceipt: onReceipt, onFill: onFill)
   }
   
   public func marketSellOrders(
@@ -198,12 +198,12 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
       SolidityFunctionParameter(name: "totalFillResults", type: .tuple([.uint256, .uint256, .uint256, .uint256]))
     ]
     
-    let method = SolidityNonPayableFunction(name: "marketSellOrders", inputs: inputs, outputs: outputs, handler: self)
+    let method = SolidityNonPayableFunction(name: "marketSellOrdersNoThrow", inputs: inputs, outputs: outputs, handler: self)
     
     let ordersInTuple = orders.map { SolidityTuple($0.getSolWrappedValues()) }
     let ordersSignatures = orders.map { Data(hex: $0.signature.clearPrefix()) }
     let invocation = method.invoke(ordersInTuple, fillAmount, ordersSignatures)
-    return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
+    return executeTransactionForFillEvent(invocation: invocation, protocolFee: CoreUtils.getProtocolFee(gasInfoProvider: gasProvider, fillOrderCount: orders.count), onReceipt: onReceipt, onFill: onFill)
   }
   
   public func fillOrder(
@@ -225,7 +225,7 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
     let orderInTuple = SolidityTuple(order.getSolWrappedValues())
     let orderSignature = Data(hex: order.signature.clearPrefix())
     let invocation = method.invoke(orderInTuple, fillAmount, orderSignature)
-    return executeTransactionForFillEvent(invocation: invocation, onReceipt: onReceipt, onFill: onFill)
+    return executeTransactionForFillEvent(invocation: invocation, protocolFee: CoreUtils.getProtocolFee(gasInfoProvider: gasProvider, fillOrderCount: 1), onReceipt: onReceipt, onFill: onFill)
   }
   
   public func cancelOrder(
@@ -297,9 +297,10 @@ public class ZrxExchangeWrapper: Contract, IZrxExchange {
   
   private func executeTransactionForFillEvent(
     invocation: SolidityInvocation,
+    protocolFee: BigUInt,
     onReceipt: @escaping (EthereumTransactionReceiptObject) -> Void,
     onFill: @escaping (ZrxExchangeWrapper.FillEventResponse) -> Void) -> Observable<EthereumData> {
-    return executeTransaction(invocation: invocation, value: nil, watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { emitedEvent in
+    return executeTransaction(invocation: invocation, value: EthereumQuantity(quantity: protocolFee), watchEvents: [ZrxExchangeWrapper.Fill], onReceipt: onReceipt, onEvent: { emitedEvent in
       switch emitedEvent.name {
       case ZrxExchangeWrapper.Fill.name:
         guard let filled = FillEventResponse(from: emitedEvent.values) else {

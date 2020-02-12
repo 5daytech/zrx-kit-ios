@@ -19,6 +19,7 @@
 		B543F1A7239FCD0F0096ABD5 /* ContractGasProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */; };
 		B54C2750238B92DC0043EA9B /* TypeEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54C274F238B92DC0043EA9B /* TypeEncoder.swift */; };
 		B54C2752238FC9940043EA9B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54C2751238FC9940043EA9B /* Constants.swift */; };
+		B577871123D598BC0080F9E9 /* CoreUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B577871023D598BC0080F9E9 /* CoreUtils.swift */; };
 		B5A4DA362328AEF500E9766A /* IRelayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A4DA352328AEF500E9766A /* IRelayerManager.swift */; };
 		B5A4DA392328B0F900E9766A /* OrderBookResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A4DA382328B0F900E9766A /* OrderBookResponse.swift */; };
 		B5A4DA3B2328DF4100E9766A /* RelayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A4DA3A2328DF4100E9766A /* RelayerManager.swift */; };
@@ -73,6 +74,7 @@
 		B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractGasProvider.swift; sourceTree = "<group>"; };
 		B54C274F238B92DC0043EA9B /* TypeEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeEncoder.swift; sourceTree = "<group>"; };
 		B54C2751238FC9940043EA9B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		B577871023D598BC0080F9E9 /* CoreUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreUtils.swift; sourceTree = "<group>"; };
 		B5A4DA352328AEF500E9766A /* IRelayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRelayerManager.swift; sourceTree = "<group>"; };
 		B5A4DA382328B0F900E9766A /* OrderBookResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderBookResponse.swift; sourceTree = "<group>"; };
 		B5A4DA3A2328DF4100E9766A /* RelayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayerManager.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 				B54C2751238FC9940043EA9B /* Constants.swift */,
 				B543F1A6239FCD0F0096ABD5 /* ContractGasProvider.swift */,
 				B53E6D5F23A3747000A2A10E /* TransactionWatcher.swift */,
+				B577871023D598BC0080F9E9 /* CoreUtils.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -485,6 +488,7 @@
 				B5C01F592331EDFE00B1C235 /* Contract.swift in Sources */,
 				B5A9BBAF232221BE00DF756B /* OrderInfo.swift in Sources */,
 				B5D3A6B023192B9D004B07D9 /* Pair.swift in Sources */,
+				B577871123D598BC0080F9E9 /* CoreUtils.swift in Sources */,
 				B5007F442362B392005218BA /* Eip712Data.swift in Sources */,
 				B5A9BBAB23221F6B00DF756B /* IOrder.swift in Sources */,
 				B5A4DA362328AEF500E9766A /* IRelayerManager.swift in Sources */,

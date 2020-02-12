@@ -31,23 +31,28 @@ class zrxkitTests: XCTestCase {
     
     XCTAssertEqual("0xe2507b493bef003030f0a053d55af80237a44c64", privateKey.address.hex(eip55: true).lowercased())
     
-    let order = Order(exchangeAddress: "0x35dd2932454449b14cee11a94d3674a936d5d7b2",
-                      makerAssetData: "0xf47261b00000000000000000000000002002d3812f58e35f0ea1ffbf80a75a38c32175fa",
-                      takerAssetData: "0xf47261b0000000000000000000000000d0a1e359811322d97991e03f863a0c30c2cf029c",
-                      makerAssetAmount: "10000000000000000000",
-                      takerAssetAmount: "10000000000000000",
-                      makerAddress: "0xe2507b493bef003030f0a053d55af80237a44c64",
-                      takerAddress: "0x0000000000000000000000000000000000000000",
-                      expirationTimeSeconds: "1561628788",
-                      senderAddress: "0x0000000000000000000000000000000000000000",
-                      feeRecipientAddress: "0xa258b39954cef5cb142fd567a46cddb31a670124",
-                      makerFee: "0",
-                      takerFee: "0",
-                      salt: "1561542388954")
+    let order = Order(
+      chainId: 3,
+      exchangeAddress: "0x35dd2932454449b14cee11a94d3674a936d5d7b2",
+      makerAssetData: "0xf47261b00000000000000000000000002002d3812f58e35f0ea1ffbf80a75a38c32175fa",
+      takerAssetData: "0xf47261b0000000000000000000000000d0a1e359811322d97991e03f863a0c30c2cf029c",
+      makerAssetAmount: "10000000000000000000",
+      takerAssetAmount: "10000000000000000",
+      makerAddress: "0xe2507b493bef003030f0a053d55af80237a44c64",
+      takerAddress: "0x0000000000000000000000000000000000000000",
+      expirationTimeSeconds: "1561628788",
+      senderAddress: "0x0000000000000000000000000000000000000000",
+      feeRecipientAddress: "0xa258b39954cef5cb142fd567a46cddb31a670124",
+      makerFee: "0",
+      makerFeeAssetData: "0x",
+      takerFee: "0",
+      takerFeeAssetData: "0x",
+      salt: "1561542388954"
+    )
     
     let signedOrder = SignUtils().ecSignOrder(order, privateKey)
     
-    XCTAssertEqual(signedOrder?.signature, "0x1cdc0509ab7dab796f6aab6d1cf2feb2a6c769483a4861dcccc016a5050a13b9354e6c0e54b91dec84893794eea275312cb0042ef1ea9b1f640f79bf4cb20782fb02")
+    XCTAssertEqual(signedOrder?.signature, "0x1cf1bf46f7b255f15a00100317e60da98da5b2f14e554cc2e28d8393bf7bbbb3f65879afa3337c8f16edb88419f43064d6de8862764f8ede7f2a0f9acc35f140c802")
   }
 
     func testPerformanceExample() {

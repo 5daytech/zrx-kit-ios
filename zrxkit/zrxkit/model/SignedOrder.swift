@@ -36,7 +36,7 @@ public struct SignedOrder: IOrder, Codable {
   
   public let signature: String
   
-  static func fromOrder(order: IOrder, signature: String) -> SignedOrder {
+  public static func fromOrder(order: IOrder, signature: String) -> SignedOrder {
     return SignedOrder(
       chainId: order.chainId,
       exchangeAddress: order.exchangeAddress,
@@ -57,8 +57,6 @@ public struct SignedOrder: IOrder, Codable {
       signature: signature
     )
   }
-  
-  
   
   public func getSolWrappedValues() -> [SolidityWrappedValue] {
     return [

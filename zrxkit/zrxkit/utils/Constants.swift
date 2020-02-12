@@ -10,5 +10,6 @@ import Foundation
 import BigInt
 
 struct Constants {
+  static let ETH_DECIMALS = 18
   static var MAX_ALLOWANCE = BigUInt(2).power(256) - BigUInt(1)
 }

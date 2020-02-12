@@ -55,9 +55,6 @@ class RelayerApiClient {
   private func request<T: Codable>(_ urlConvertible: URLRequestConvertible) -> Observable<T> {
     return Observable<T>.create { observer in
       let request = Alamofire.request(urlConvertible).responseData(completionHandler: { (response) in
-        
-        let statusCode = response.response?.statusCode
-        
         switch response.result {
         case .success(let value):
           do {
