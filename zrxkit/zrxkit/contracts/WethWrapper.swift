@@ -42,11 +42,11 @@ public class WethWrapper: Contract, IWethWrapper {
   static let FUNC_WITHDRAW = "withdraw"
   
   public var depositEstimatedPrice: BigUInt {
-    return (depositGasLimit * gasProvider.getGasPrice(WethWrapper.FUNC_DEPOSIT)).eth
+    return (depositGasLimit * gasProvider.getGasPrice(WethWrapper.FUNC_DEPOSIT))
   }
 
   public var withdrawEstimatedPrice: BigUInt {
-    return (withdrawGasLimit * gasProvider.getGasPrice(WethWrapper.FUNC_WITHDRAW)).eth
+    return (withdrawGasLimit * gasProvider.getGasPrice(WethWrapper.FUNC_WITHDRAW))
   }
 
   public var depositGasLimit: BigUInt {

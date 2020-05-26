@@ -77,6 +77,7 @@ public class Contract: GenericERC20Contract {
     onReceiptCallback = onReceipt
     onEventCallback = onEvent
     watchingEvents = watchEvents
+    
     return Observable.create { observer in
       self.eth.getTransactionCount(address: self.privateKey.address, block: .latest, response: { (nonce) in
         switch nonce.status {

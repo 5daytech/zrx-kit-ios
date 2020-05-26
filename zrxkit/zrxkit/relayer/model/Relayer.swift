@@ -28,6 +28,6 @@ public struct RelayerConfig {
   let version: String
   
   var url: String {
-    return "\(baseUrl)/\(suffix)\(version)"
+    return "\(baseUrl)\(suffix)\(version)"
   }
 }

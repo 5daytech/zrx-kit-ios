@@ -36,7 +36,7 @@ public class ZrxKit {
     self.privateKey = privateKey
     self.networkType = networkType
     self.gasInfoProvider = gasInfoProvider
-    web3 = Web3(rpcURL: networkType.getInfuraUrl(infuraKey: infuraKey))
+    web3 = Web3(provider: Web3HttpProvider(rpcURL: networkType.getInfuraUrl(infuraKey: infuraKey)))
   }
   
   public func getWethWrapperInstance(wrapperAddress: String? = nil) -> IWethWrapper {
@@ -146,7 +146,7 @@ public class ZrxKit {
     }
     
     func getInfuraUrl(infuraKey: String) -> String {
-      return "https://\(subdomain).fridayte.ch/\(infuraKey)"
+      return "https://\(subdomain).infura.io/v3/\(infuraKey)"
     }
   }
   
